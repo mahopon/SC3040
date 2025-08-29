@@ -38,8 +38,6 @@
    cd 3040-TEL2-KK/app
    ```
 
-1. Install dependencies
+1. Complete [Backend Setup](./app/backend/README.md#️-setup)
 
-   ```bash
-   npm install
-   ```
+1. Complete [Frontend Setup](./app/frontend/README.md#️-setup)
