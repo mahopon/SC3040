@@ -8,11 +8,11 @@ BASE_DIR = Path(__file__).resolve().parent
 
 
 class Settings(BaseSettings):
-    APP_NAME: str = "DefaultName"
+    APP_NAME: str = "PawfectMatch"
     database_hostname: str = "localhost"
-    database_port: str = "5432"
+    database_port: str = "5435"
     database_password: SecretStr = SecretStr("P@ssw0rd123!")
-    database_name: str = "pet_buddy"
+    database_name: str = "pawfectmatch"
     database_username: SecretStr = SecretStr("admin")
     GOOGLE_CLIENT_ID: SecretStr
     GOOGLE_CLIENT_SECRET: SecretStr
