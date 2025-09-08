@@ -51,8 +51,3 @@ ignore_errors = true
 [[tool.mypy.overrides]]
 module = 'app.*.models'
 ignore_errors = true
-
-[tools.uv.scripts]
-format = "black app/"
-lint = ["sh", "-c", "ruff check . && mypy ."]
-check = ["sh", "-c", "black --check . && ruff check . && mypy ."]
