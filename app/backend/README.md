@@ -41,7 +41,7 @@ GOOGLE_CLIENT_SECRET=
    alembic upgrade head
    ```
 
-6. Run mock_data.py to add mock data to database (Auth, user, petowner, petcaretaker, pet, service, offeredservice)
+6. Run mock_data.py to add mock data to database (Auth, user, petowner, petcaretaker, pet, service, offeredservice, location)
 
 7. Run development server
 
