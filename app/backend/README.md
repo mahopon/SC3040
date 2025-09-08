@@ -15,14 +15,25 @@ This is the backend of the SC3040 project.
     .\venv\Scripts\activate
    ```
 
-1. Install dependencies
+2. Install dependencies
 
    ```bash
-   pip install -r requirements.txt
+   pip install -r requirements-runtime.txt
+   pip install -r requirements-dev.txt
    ```
+   
+3. Ensure local PostgreSQL instance is running (Using docker-compose provided or local install)
 
-1. Run development server
+4. Run migrations (Create tables)
+
+   '''bash
+   alembic upgrade head
+   '''
+
+6. Run development server
 
    ```bash
-   python main.py
+   python -m app.main
+   OR
+   uvicorn app.main:app --host 0.0.0.0 --port 8000
    ```
