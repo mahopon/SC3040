@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.requests import Request
 from starlette.middleware.sessions import SessionMiddleware
+from app.api import router
 import uvicorn
 from contextlib import asynccontextmanager
 from app.config import get_settings
@@ -28,6 +29,8 @@ app.add_middleware(
 )
 
 app.add_middleware(SessionMiddleware, token_urlsafe(32))
+
+app.include_router(router)
 
 
 @app.get("/")
