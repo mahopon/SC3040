@@ -26,9 +26,9 @@ This is the backend of the SC3040 project.
 
 4. Run migrations (Create tables)
 
-   '''bash
+   ```bash
    alembic upgrade head
-   '''
+   ```
 
 6. Run development server
 
