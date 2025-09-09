@@ -1,0 +1,2 @@
+class ProfileNotExists(Exception):
+    pass
