@@ -1,0 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+Antique&display=swap");
+@import "tailwindcss";
+
+body {
+  font-family: "Zen Kaku Gothic Antique", sans-serif;
+}
+
+.auth-bg {
+  clip-path: polygon(0 0, 100% 0, 100% 39%, 0 67%);
+}
