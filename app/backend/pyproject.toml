@@ -11,10 +11,11 @@ dependencies = [
     "httpx>=0.28.1",
     "itsdangerous>=2.2.0",
     "psycopg2>=2.9.10",
-    "pydantic>=2.11.7",
+    "pydantic[email]>=2.11.7",
     "pydantic-settings>=2.10.1",
     "sqlalchemy>=2.0.43",
     "types-authlib>=1.6.2.20250825",
+    "types-psycopg2>=2.9.21.20250809",
     "uvicorn>=0.35.0",
 ]
 
@@ -31,7 +32,13 @@ dev = [
 
 [tool.black]
 line-length = 120
-exclude = "alembic"
+exclude = '''
+(
+    alembic/
+|   scripts/
+)
+'''
+
 
 [tool.ruff]
 line-length = 120
@@ -41,7 +48,7 @@ exclude = ["alembic"]
 strict = true
 exclude = [
     'app/config.py$',
-    '^app/[^/]+/models\.py$'
+    '^app/[^/]+/models\.py$',
 ]
 
 [[tool.mypy.overrides]]
