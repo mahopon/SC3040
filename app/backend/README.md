@@ -9,44 +9,78 @@ This is the backend of the SC3040 project.
    ```bash
    python -m venv venv
 
-    # Mac/Linux
-    source ./venv/bin/activate
-    # Windows
-    .\venv\Scripts\activate
+   # Mac/Linux
+   source ./venv/bin/activate
+
+   # Windows
+   .\venv\Scripts\activate
    ```
 
-2. Install dependencies
+1. Install dependencies
 
    ```bash
    pip install -r requirements-runtime.txt
    pip install -r requirements-dev.txt
    ```
-   
-3. Ensure local PostgreSQL instance is running (Using docker-compose provided or local install)
-4. Create .env file under /app with the following values
-```
-APPNAME=
-database_hostname=
-database_port=
-database_password=
-database_name=
-database_admin=
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-```
 
-5. Run migrations (Create tables)
+1. Ensure local PostgreSQL instance is running
 
-   ```bash
-   alembic upgrade head
+   - Use the provided Docker Compose file to run PostgreSQL in a container
+
+     ```bash
+     docker compose up -d
+     ```
+
+   - Or, Install PostgreSQL locally on your machine.
+
+1. Create .env file under /app with the following values
+
+   ```env
+   APP_NAME=
+   database_hostname=
+   database_port=
+   database_password=
+   database_name=
+   database_username=
+   GOOGLE_CLIENT_ID=
+   GOOGLE_CLIENT_SECRET=
    ```
 
-6. Run mock_data.py to add mock data to database (Auth, user, petowner, petcaretaker, pet, service, offeredservice, location)
+1. Setup database
 
-7. Run development server
+   ```bash
+   # Create Database + Run Migrations + Insert Mock Data
+   make setup
+   ```
+
+   - Create Database
+
+     ```bash
+     make create_db
+     # OR
+     python app/database/scripts/create_db.py
+     ```
+
+   - Run Migrations
+
+     ```bash
+     make migrate
+     # OR
+     alembic upgrade head
+     ```
+
+   - Insert Mock Data
+
+     ```bash
+     make mock_data
+     # OR
+     python app/database/scripts/mock_data.py
+     ```
+
+1. Run development server
 
    ```bash
    python -m app.main
-   OR
+   # OR
    uvicorn app.main:app --host 0.0.0.0 --port 8000
    ```

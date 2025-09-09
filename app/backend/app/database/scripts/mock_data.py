@@ -1,6 +1,11 @@
+import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
+
 from fastapi import Depends
 from app.config import get_settings
-from app.database.core import get_db
+from app.database.core import SessionLocal, get_db
 from app.auth.repository import create_auth
 from app.auth.models import Auth
 from app.profile.repository import create_profile
@@ -15,8 +20,6 @@ from app.service.models import Service, OfferedService, ServiceBooking, ServiceB
 from app.service.repository import (
     create_service,
     create_offered_service,
-    create_service_booking,
-    create_service_booking_day,
 )
 from app.location.models import Location
 from app.location.repository import create_location
@@ -28,7 +31,7 @@ settings = get_settings()
 
 password = "P@ssw0rd123!"
 
-session = Depends(get_db)
+session = next(get_db())
 
 # UUID generation
 uuids = [uuid4() for i in range(2)]
@@ -149,3 +152,10 @@ for i in range(1, 4):
     for o in range(1, 4):
         offered_svc.locations.append(locs[o])
     create_offered_service(db_session=session, offered_service_new=offered_svc)
+
+# Commit the transaction
+print("Committing changes to the database...")  # Debugging print
+session.commit()
+
+# Close the session
+session.close()
