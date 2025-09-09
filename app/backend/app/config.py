@@ -9,6 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent
 
 class Settings(BaseSettings):
     APP_NAME: str = "PawfectMatch"
+    FRONTEND_URL: str = "http://localhost:3000"
     database_hostname: str = "localhost"
     database_port: str = "5435"
     database_password: SecretStr = SecretStr("P@ssw0rd123!")
