@@ -14,6 +14,12 @@ def get_auth_by_id(*, db_session: Session, id: UUID) -> Auth | None:
     return db_session.execute(stmt).scalar_one_or_none()
 
 
+def get_auth_by_session_id(*, db_session: Session, session_id: str) -> Auth | None:
+    stmt = select(Auth, AuthSession).join(Auth.sessions).where(AuthSession.session_id == session_id)
+    auth = db_session.execute(stmt).scalar_one_or_none()
+    return auth
+
+
 def create_auth(*, db_session: Session, auth_new: Auth) -> None:
     db_session.add(auth_new)
 
