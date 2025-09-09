@@ -3,9 +3,8 @@ import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
 
-from fastapi import Depends
 from app.config import get_settings
-from app.database.core import SessionLocal, get_db
+from app.database.core import get_db
 from app.auth.repository import create_auth
 from app.auth.models import Auth
 from app.profile.repository import create_profile
@@ -16,7 +15,7 @@ from app.petcaretaker.models import PetCareTaker
 from app.petcaretaker.repository import create_petcaretaker
 from app.pet.models import Pet
 from app.pet.repository import create_pet
-from app.service.models import Service, OfferedService, ServiceBooking, ServiceBookingDay
+from app.service.models import Service, OfferedService
 from app.service.repository import (
     create_service,
     create_offered_service,
