@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, Path, Body
+from fastapi import APIRouter, status, Path, Body, Depends
 from fastapi.responses import JSONResponse, RedirectResponse, Response
 from fastapi.exceptions import HTTPException
 from fastapi.requests import Request
@@ -12,21 +12,34 @@ from .schemas import (
 from app.database.core import DbSession
 from .service import login, create_session_id, register_web, register_oauth, change_password, process_oauth_callback
 from .models import Auth, AuthSession
+from .dependency import get_id_from_session
 from uuid import UUID
 from secrets import token_urlsafe
 from .oauth2 import oauth
 from typing import Any
+from app.config import get_settings
 
 auth_router = APIRouter()
+settings = get_settings()
 
 
 @auth_router.post("/login", response_model=AuthLoginResponse)
 def login_auth(auth_in: AuthLogin, db_session: DbSession) -> JSONResponse:
-    auth: Auth = login(db_session=db_session, email=auth_in.email, password=auth_in.password)
+    auth: Auth = login(db_session=db_session, email=auth_in.email, password=auth_in.password.get_secret_value())
     session: AuthSession = create_session_id(db_session=db_session, auth=auth)
     # TODO Get name from profile domain
-    resp: AuthLoginResponse = AuthLoginResponse(user_id=auth.id, name="temp", token=session.session_id)
-    return JSONResponse(content=resp.model_dump())
+    resp: AuthLoginResponse = AuthLoginResponse(name="temp")
+    response = JSONResponse(content=resp.model_dump())
+    response.set_cookie(
+        key="session_id",
+        value=session.session_id,
+        httponly=True,
+        secure=True,
+        samesite="none",  # Needed for localhost cross port
+        domain=f".{settings.FRONTEND_URL}",
+        max_age=31 * 60 * 60 * 24,  # 31 days
+    )
+    return response
 
 
 @auth_router.post("/register", response_model=AuthRegisterResponse)
@@ -41,7 +54,7 @@ def register_auth(auth_new: AuthRegister, db_session: DbSession) -> RedirectResp
 )
 def change_password_auth(
     db_session: DbSession,
-    user_id: UUID = Path(...),
+    user_id: UUID = Depends(get_id_from_session),
     pw_change: AuthPasswordUpdate = Body(...),
 ) -> Response:
     change_password(db_session=db_session, user_id=user_id, auth_pw_in=pw_change)
@@ -76,12 +89,14 @@ async def oauth_callback(request: Request, db_session: DbSession) -> RedirectRes
         session = create_session_id(db_session=db_session, auth=auth)
 
     # Set session ID as HttpOnly cookie
-    response = RedirectResponse(url="/home")
+    response = RedirectResponse(url=f"http://{settings.FRONTEND_URL}:{settings.FRONTEND_PORT}/home")
     response.set_cookie(
         key="session_id",
         value=session.session_id,
         httponly=True,
-        secure=True,  # True in production with HTTPS
+        secure=True,
+        samesite="none",  # Needed for localhost cross port
+        domain=f".{settings.FRONTEND_URL}",
         max_age=31 * 60 * 60 * 24,  # 31 days
     )
     return response

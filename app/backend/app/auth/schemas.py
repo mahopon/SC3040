@@ -1,16 +1,15 @@
-from pydantic import BaseModel, SecretStr, field_validator
-from datetime import datetime
-from uuid import UUID
-from typing import Optional
+from pydantic import BaseModel, SecretStr, field_validator, StringConstraints, validator, EmailStr
+from datetime import datetime, date
+from typing import Optional, Annotated, Any
 from .models import Auth
 
 
 class AuthLogin(BaseModel):
-    email: str
+    email: EmailStr
     password: SecretStr
 
     @field_validator("password")
-    def validate_password(cls, v: SecretStr):
+    def validate_password(cls, v: SecretStr) -> SecretStr:
         pw = v.get_secret_value()
         if len(pw) < 8:
             raise ValueError("Password must be at least 8 characters")
@@ -26,14 +25,18 @@ class AuthLogin(BaseModel):
 
 
 class AuthRegister(AuthLogin):
-    name: str
+    name: Annotated[str, StringConstraints(min_length=3)]
     dob: datetime
+
+    @validator("dob")
+    def validate_dob(cls, v: datetime, values: dict[str, Any]) -> datetime:
+        if v < date.today():
+            raise ValueError("Date of Birth cannot be today or later")
+        return v
 
 
 class AuthLoginResponse(BaseModel):
-    user_id: UUID
     name: str
-    token: str
 
 
 class AuthRegisterResponse(BaseModel):
@@ -53,7 +56,7 @@ class AuthPasswordUpdate(BaseModel):
     new_password: SecretStr
 
     @field_validator("new_password")
-    def validate_password(cls, v: SecretStr):
+    def validate_password(cls, v: SecretStr) -> SecretStr:
         pw = v.get_secret_value()
         if len(pw) < 8:
             raise ValueError("Password must be at least 8 characters")
@@ -68,12 +71,13 @@ class AuthPasswordUpdate(BaseModel):
         return v
 
 
-class OAuthRegister(AuthLogin):
+class OAuthRegister(BaseModel):
+    email: str
     name: str
 
 
 class OAuthOutcome(BaseModel):
-    existing_auth: Optional[Auth] = None  # type: ignore # noqa
+    existing_auth: Optional[Auth] = None  # noqa
     registration: Optional[OAuthRegister] = None
 
     model_config = {"arbitrary_types_allowed": True}
