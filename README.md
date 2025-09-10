@@ -14,20 +14,34 @@
 
 ## 📁 Lab Deliverables
 
-- [**Lab 1: Project Proposal and Requirements**](./Lab%201/)  
+- **Lab 1: Project Proposal and Requirements**
+
   Project Proposal, Use Case Model, Backlog, Meeting Minutes
 
-- [**Lab 2: Software Quality Management**](./Lab%202/)  
+- **Lab 2: Software Quality Management**
   System Requirements Specification, Quality Plan, Backlog, Meeting Minutes
 
-- [**Lab 3: Project Planning and Prototype Construction**](./Lab%203/)  
+- **Lab 3: Project Planning and Prototype Construction**
   Project Plan, Risk Management, Prototype Demo, Backlog, Meeting Minutes
 
-- [**Lab 4: Configuration Management**](./Lab%204/)  
+- **Lab 4: Configuration Management**  
   Design Report on Software Maintainability, Configuration Management Plan, Change Management Plan, Release Plan, Backlog, Meeting Minutes
 
-- [**Lab 5: Software Testing**](./Lab%205/)  
+- **Lab 5: Software Testing**
   Presentation Slides, Test Plan, Test Cases & Coverage Report, GitHub, Backlog, Meeting Minutes, Peer Review
+
+## 📂 Folder Structure
+
+```
+3040-TEL2-KK/
+│── app/                     # Source code (frontend & backend)
+│
+├── Backlog/                 # Backlog artefacts
+│
+├── Documentation/           # Project documentation
+│
+└── Meeting Minutes/         # Records of team discussions
+```
 
 ## ⚙️ Repository Setup
 
