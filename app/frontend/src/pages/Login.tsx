@@ -1,42 +1,63 @@
 import { EyeOff, Eye } from "lucide-react"
 import { useState } from "react"
+import { useForm } from "react-hook-form"
+import Loading from "@/components/Loading"
+
+type TLoginForm = {
+  email: string
+  password: string
+  rememberMe: boolean
+}
 
 const Login = () => {
-  const [email, setEmail] = useState("johndoe@example.com")
-  const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
-  const [rememberMe, setRememberMe] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Login attempt:", { email, password, rememberMe })
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<TLoginForm>({
+    defaultValues: {
+      email: "",
+      password: "",
+      rememberMe: false,
+    },
+    mode: "onBlur",
+  })
+
+  const onSubmit = (data: TLoginForm) => {
+    return new Promise((resolve: any, reject: any) => {
+      setTimeout(() => {
+        console.log(data)
+        resolve()
+      }, 5000)
+    })
   }
 
   return (
     <>
-      <div className="auth-bg fixed inset-0 z-[-1] bg-gradient-to-br from-purple-400 via-blue-400 via-teal-400 to-yellow-300"></div>
+      <div className="auth-bg fixed inset-0 z-[-1] bg-gradient-to-br from-indigo-400 from-5% via-teal-300 via-25% to-orange-300 to-80%"></div>
       <div className="min-h-screen flex flex-col px-12">
-        <header className="flex justify-between items-center py-9">
+        <header className="flex justify-between items-center pt-9">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center">
               <span className="text-white font-bold text-xl">PM</span>
             </div>
             <span className="text-gray-800 font-medium text-xl">PawfectMatch</span>
           </div>
-          <button className="px-6 py-2 border-2 border-black text-black font-bold text-sm hover:bg-black hover:text-white hover:cursor-pointer transition-colors">
+          <button className="px-6 py-2 border-2 border-black text-black font-bold text-sm hover:bg-black hover:text-white transition-colors">
             SIGN UP
           </button>
         </header>
 
-        {/* Main Content */}
-        <div className="flex-1 flex items-center justify-center p-6">
-          <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
+        <div className="flex-1 flex items-center justify-center">
+          <div className="bg-white rounded-lg shadow-xl px-16 pt-14 pb-20 w-full max-w-lg">
             <div className="text-center mb-8">
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">Log In to Petcare</h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Login to PawfectMatch</h1>
               <p className="text-gray-600 text-sm">A simple way to take care for your pet</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
               <div>
                 <label
                   htmlFor="email"
@@ -45,13 +66,23 @@ const Login = () => {
                   Email Address
                 </label>
                 <input
-                  type="email"
                   id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required
+                  type="email"
+                  aria-invalid={!!errors.email}
+                  className={`w-full px-3 py-3 border rounded-md focus:outline-none focus:border-black ${
+                    errors.email ? "border-red-500 focus:border-red-500" : "border-gray-300"
+                  }`}
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: "Enter a valid email",
+                    },
+                  })}
                 />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                )}
               </div>
 
               <div>
@@ -63,59 +94,50 @@ const Login = () => {
                 </label>
                 <div className="relative">
                   <input
-                    type={showPassword ? "text" : "password"}
                     id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••••"
-                    className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10"
-                    required
+                    type={showPassword ? "text" : "password"}
+                    aria-invalid={!!errors.password}
+                    className={`w-full px-3 py-3 border rounded-md focus:outline-none focus:border-black ${
+                      errors.password ? "border-red-500" : "border-gray-300"
+                    }`}
+                    {...register("password", { required: "Password is required" })}
                   />
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    onClick={() => setShowPassword((s) => !s)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
+                {errors.password && (
+                  <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                )}
               </div>
 
               <div className="flex items-center justify-between">
                 <label className="flex items-center">
                   <input
                     type="checkbox"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-4 h-4 border-gray-300 rounded"
+                    {...register("rememberMe")}
                   />
                   <span className="ml-2 text-sm text-gray-600">Remember Me</span>
                 </label>
-                <a href="#" className="text-sm text-gray-600 hover:text-gray-800">
+                <a href="#" className="text-sm text-gray-600 underline hover:text-gray-800">
                   Forgot Password?
                 </a>
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-gray-900 text-white py-3 px-4 rounded-md hover:bg-gray-800 transition-colors font-medium"
+                disabled={isSubmitting}
+                className="w-full bg-black text-white py-3 px-4 rounded-md hover:bg-gray-800 transition-colors font-medium disabled:opacity-60"
               >
-                PROCEED
+                {isSubmitting ? <Loading /> : "PROCEED"}
               </button>
             </form>
-
-            <div className="mt-8">
-              <div className="text-center text-sm text-gray-500 mb-4">OR USE</div>
-              <div className="flex justify-center space-x-4">
-                <button className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-600 transition-colors">
-                  G
-                </button>
-                <button className="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center text-white hover:bg-gray-800 transition-colors"></button>
-                <button className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition-colors">
-                  f
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </div>
