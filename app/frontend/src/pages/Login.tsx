@@ -26,12 +26,7 @@ const Login = () => {
   })
 
   const onSubmit = (data: TLoginForm) => {
-    return new Promise((resolve: any, _: any) => {
-      setTimeout(() => {
-        console.log(data)
-        resolve()
-      }, 5000)
-    })
+    console.log(data)
   }
 
   return (
