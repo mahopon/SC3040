@@ -1,7 +1,8 @@
-from pydantic import BaseModel, SecretStr, field_validator, StringConstraints, validator, EmailStr
-from datetime import datetime, date
-from typing import Optional, Annotated, Any
+from pydantic import BaseModel, SecretStr, field_validator, StringConstraints, EmailStr
+from datetime import datetime, timezone
+from typing import Optional, Annotated
 from .models import Auth
+from app.profile.enums import Gender
 
 
 class AuthLogin(BaseModel):
@@ -23,32 +24,29 @@ class AuthLogin(BaseModel):
             raise ValueError("Password must contain a special character (@$!%*?&)")
         return v
 
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, v):
+        # You can skip checking format manually; EmailStr already does it
+        if not v:
+            raise ValueError("Invalid email")  # simple message
+        return v
+
 
 class AuthRegister(AuthLogin):
     name: Annotated[str, StringConstraints(min_length=3)]
     dob: datetime
+    gender: Gender
 
-    @validator("dob")
-    def validate_dob(cls, v: datetime, values: dict[str, Any]) -> datetime:
-        if v < date.today():
+    @field_validator("dob")
+    def validate_dob(cls, v: datetime) -> datetime:
+        if v.date() >= datetime.now(timezone.utc).date():
             raise ValueError("Date of Birth cannot be today or later")
         return v
 
 
 class AuthLoginResponse(BaseModel):
     name: str
-
-
-class AuthRegisterResponse(BaseModel):
-    message: str
-
-
-class AuthRead(BaseModel):
-    pass
-
-
-class AuthUpdate(BaseModel):
-    pass
 
 
 class AuthPasswordUpdate(BaseModel):
