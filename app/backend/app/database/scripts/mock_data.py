@@ -5,9 +5,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".
 
 from app.config import get_settings
 from app.database.core import get_db
-from app.auth.repository import create_auth
+from app.auth.repository import AuthRepository
 from app.auth.models import Auth
-from app.profile.repository import create_profile
+from app.profile.repository import ProfileRepository
 from app.profile.models import Profile
 from app.petowner.models import PetOwner
 from app.petowner.repository import create_petowner
@@ -31,16 +31,17 @@ settings = get_settings()
 password = "P@ssw0rd123!"
 
 session = next(get_db())
-
+auth_repo = AuthRepository(db_session=session)
+prof_repo = ProfileRepository(db_session=session)
 # UUID generation
 uuids = [uuid4() for i in range(2)]
 # Auth + Profile + Pet Owner / Pet Care Taker
 for i in range(2):
     auth = Auth(id=uuids[i], email=f"test{i}@gmail.com")
     auth.set_password(password)
-    create_auth(db_session=session, auth_new=auth)
+    auth_repo.create_auth(auth_new=auth)
     profile = Profile(id=uuids[i], name=f"test{i}", dob=datetime.now(), gender="Male")
-    create_profile(db_session=session, profile_new=profile)
+    prof_repo.create_profile(profile_new=profile)
 owner = PetOwner(id=uuids[0])
 create_petowner(db_session=session, petowner_new=owner)
 caretaker = PetCareTaker(id=uuids[1], yoe=5)
