@@ -7,6 +7,8 @@ cffi==1.17.1 ; platform_python_implementation != 'PyPy'
 click==8.2.1
 colorama==0.4.6 ; sys_platform == 'win32'
 cryptography==45.0.7
+dnspython==2.8.0
+email-validator==2.3.0
 fastapi==0.116.1
 greenlet==3.2.4 ; (python_full_version < '3.14' and platform_machine == 'AMD64') or (python_full_version < '3.14' and platform_machine == 'WIN32') or (python_full_version < '3.14' and platform_machine == 'aarch64') or (python_full_version < '3.14' and platform_machine == 'amd64') or (python_full_version < '3.14' and platform_machine == 'ppc64le') or (python_full_version < '3.14' and platform_machine == 'win32') or (python_full_version < '3.14' and platform_machine == 'x86_64')
 h11==0.16.0
