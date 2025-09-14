@@ -4,7 +4,7 @@ from fastapi.requests import Request
 from .api import router
 from .exception_handlers import register_exception_handlers
 from starlette.middleware.sessions import SessionMiddleware
-from app.middleware import AuthMiddleware
+from app.middleware import AuthMiddleware, ResponseTimeMiddleware
 import uvicorn
 from contextlib import asynccontextmanager
 from .config import get_settings
@@ -32,6 +32,7 @@ app.add_middleware(
 
 app.add_middleware(SessionMiddleware, token_urlsafe(32))
 app.add_middleware(AuthMiddleware)
+app.add_middleware(ResponseTimeMiddleware)
 app.include_router(router)
 register_exception_handlers(app)
 
