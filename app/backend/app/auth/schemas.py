@@ -24,14 +24,6 @@ class AuthLogin(BaseModel):
             raise ValueError("Password must contain a special character (@$!%*?&)")
         return v
 
-    @field_validator("email")
-    @classmethod
-    def validate_email(cls, v):
-        # You can skip checking format manually; EmailStr already does it
-        if not v:
-            raise ValueError("Invalid email")  # simple message
-        return v
-
 
 class AuthRegister(AuthLogin):
     name: Annotated[str, StringConstraints(min_length=3)]

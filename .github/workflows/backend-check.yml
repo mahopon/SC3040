@@ -38,9 +38,7 @@ jobs:
           pip install -r requirements-runtime.txt
 
       - name: run black, ruff, mypy
-        run: |
-          make format
-          make check
+        run: make check
   UTests:
     runs-on: ubuntu-latest
     defaults:

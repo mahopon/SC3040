@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from app.auth.views import auth_router
+
 # from app.profile.views import profile_router
 
 router = APIRouter()

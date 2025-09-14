@@ -11,7 +11,7 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 
 
-async def validation_exception_handler(request: Request, exc: RequestValidationError):
+async def validation_exception_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
     msg = str(exc.errors()[0]["msg"])
     msg = msg.removeprefix("Value error, ")
     return JSONResponse(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, content={"message": msg})
