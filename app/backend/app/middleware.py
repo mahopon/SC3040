@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from typing import Any
 
-EXCLUDE_PATHS = ["/", "/auth/login", "/auth/register", "/auth/login/google", "/docs", "/openapi.json"]
+EXCLUDE_PATHS = ["/", "/auth/login", "/auth/register", "/auth/login/google", "/docs", "/openapi.json", "/auth/callback"]
 
 
 class AuthMiddleware(BaseHTTPMiddleware):

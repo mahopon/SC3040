@@ -2,11 +2,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.requests import Request
 from .api import router
+from .exception_handlers import register_exception_handlers
 from starlette.middleware.sessions import SessionMiddleware
 from app.middleware import AuthMiddleware
 import uvicorn
 from contextlib import asynccontextmanager
-from app.config import get_settings
+from .config import get_settings
 from typing import AsyncGenerator
 from secrets import token_urlsafe
 
@@ -23,7 +24,7 @@ app = FastAPI(title=settings.APP_NAME, docs_url="/docs", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[f"{settings.frontend_url_with_scheme}"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -32,6 +33,7 @@ app.add_middleware(
 app.add_middleware(SessionMiddleware, token_urlsafe(32))
 app.add_middleware(AuthMiddleware)
 app.include_router(router)
+register_exception_handlers(app)
 
 
 @app.get("/")
