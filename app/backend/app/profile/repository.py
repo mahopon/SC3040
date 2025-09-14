@@ -1,20 +1,21 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import select, update
+from sqlalchemy import update
 from .models import Profile
 from .schemas import ProfileSetup
 from uuid import UUID
+from app.util.repository import get_by_field, db_add
 
 
-def get_profile_by_id(*, db_session: Session, profile_id: UUID) -> Profile | None:
-    stmt = select(Profile).where(Profile.id == profile_id)
-    profile = db_session.execute(stmt).scalar_one_or_none()
-    return profile
+class ProfileRepository:
+    def __init__(self, db_session: Session):
+        self.db_session = db_session
 
+    def get_by_id(self, profile_id: UUID) -> Profile | None:
+        return get_by_field(self.db_session, Profile, "id", profile_id)
 
-def create_profile(*, db_session: Session, profile_new: Profile) -> None:
-    db_session.add(profile_new)
+    def create_profile(self, profile_new: Profile) -> None:
+        db_add(self.db_session, profile_new)
 
-
-def setup_profile(*, db_session: Session, profile: ProfileSetup) -> None:
-    stmt = update(Profile).where(Profile.id == profile.id).values(**profile.model_dump())
-    db_session.execute(stmt)
+    def update_initial(self, profile_setup: ProfileSetup) -> None:
+        stmt = update(Profile).where(Profile.id == profile_setup.id).values(**profile_setup.model_dump())
+        self.db_session.execute(stmt)
