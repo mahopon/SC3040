@@ -38,7 +38,9 @@ jobs:
           pip install -r requirements-runtime.txt
 
       - name: run black, ruff, mypy
-        run: make check
+        run: |
+          make format
+          make check
   UTests:
     runs-on: ubuntu-latest
     defaults:
@@ -67,4 +69,7 @@ jobs:
           pip install -r requirements-runtime.txt
 
       - name: run unit tests
-        run: PYTHONPATH=$(pwd) pytest
+        run: |
+          export GOOGLE_CLIENT_ID=""
+          export GOOGLE_CLIENT_SECRET=""
+          PYTHONPATH=$(pwd) pytest
