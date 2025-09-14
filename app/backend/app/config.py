@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     FRONTEND_PORT: str = "5173"
     database_hostname: str = "localhost"
     database_port: str = "5435"
+    database_name: str = "pawfectmatch"
     database_password: SecretStr = SecretStr("P@ssw0rd123!")
     database_username: SecretStr = SecretStr("admin")
     GOOGLE_CLIENT_ID: SecretStr
