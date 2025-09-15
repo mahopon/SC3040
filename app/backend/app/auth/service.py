@@ -63,7 +63,7 @@ class AuthService(InternalAuthService):
             new_auth = OAuthRegister(email=email, name=name)
             auth = self._register_oauth(auth_in=new_auth)
         session = self._create_session(auth=auth)
-        return OAuthLoginResponse(id=auth.id, session_id=session.session_id)
+        return OAuthLoginResponse(session_id=session.session_id)
 
     def _register_oauth(self, *, auth_in: OAuthRegister) -> Auth:
         new_auth = Auth(**auth_in.model_dump(exclude={"name"}))

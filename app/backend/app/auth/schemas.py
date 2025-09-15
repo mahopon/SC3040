@@ -2,7 +2,6 @@ from pydantic import BaseModel, SecretStr, field_validator, StringConstraints, E
 from datetime import datetime, timezone
 from typing import Optional, Annotated
 from app.profile.enums import Gender
-from uuid import UUID
 
 
 class AuthLogin(BaseModel):
