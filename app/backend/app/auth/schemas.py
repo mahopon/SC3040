@@ -1,8 +1,8 @@
 from pydantic import BaseModel, SecretStr, field_validator, StringConstraints, EmailStr
 from datetime import datetime, timezone
 from typing import Optional, Annotated
-from .models import Auth
 from app.profile.enums import Gender
+from uuid import UUID
 
 
 class AuthLogin(BaseModel):
@@ -38,7 +38,7 @@ class AuthRegister(AuthLogin):
 
 
 class AuthLoginResponse(BaseModel):
-    name: str
+    session_id: str
 
 
 class AuthPasswordUpdate(BaseModel):
@@ -66,11 +66,8 @@ class OAuthRegister(BaseModel):
     name: str
 
 
-class OAuthOutcome(BaseModel):
-    existing_auth: Optional[Auth] = None  # noqa
-    registration: Optional[OAuthRegister] = None
-
-    model_config = {"arbitrary_types_allowed": True}
+class OAuthLoginResponse(AuthLoginResponse):
+    pass
 
 
 class OAuthProvider(BaseModel):

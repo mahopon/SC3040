@@ -3,12 +3,10 @@ from fastapi.responses import JSONResponse, RedirectResponse, Response
 from fastapi.exceptions import HTTPException
 from fastapi.requests import Request
 from .schemas import (
-    AuthLoginResponse,
     AuthLogin,
     AuthRegister,
     AuthPasswordUpdate,
 )
-from .models import Auth
 from .dependency import CurrentId, AuthSvc
 from secrets import token_urlsafe
 from .oauth2 import oauth
@@ -22,18 +20,16 @@ settings = get_settings()
 
 @auth_router.post("/login")
 def login_auth(auth_in: AuthLogin, auth_service: AuthSvc) -> JSONResponse:
-    auth = auth_service.login(email=auth_in.email, password=auth_in.password.get_secret_value())
-    session = auth_service.create_session(auth=auth)
+    auth = auth_service.login(email=auth_in.email, password=auth_in.password)
     # Get profile of user and return name
-    resp = AuthLoginResponse(name="temp")
-    response = JSONResponse(content=resp.model_dump())
-    set_cookie(response=response, key="session_id", value=session.session_id, max_age=10 * 60 * 60 * 24)  # 10 days
+    response = JSONResponse(content={"name": "temp"})
+    set_cookie(response=response, key="session_id", value=auth.session_id, max_age=10 * 60 * 60 * 24)  # 10 days
     return response
 
 
 @auth_router.post("/register")
 def register_auth(auth_new: AuthRegister, auth_service: AuthSvc) -> Response:
-    auth: Auth = auth_service.register_web(auth_in=auth_new)  # noqa
+    auth_service.register(auth_in=auth_new)
     # Register profile
     return Response(status_code=status.HTTP_201_CREATED)
 
@@ -71,14 +67,8 @@ async def oauth_callback(request: Request, auth_service: AuthSvc) -> RedirectRes
 
     auth_details = await auth_service.process_oauth_callback(oauth=oauth, request=request)
 
-    if auth_details.existing_auth:
-        auth = auth_details.existing_auth
-    elif auth_details.registration:
-        auth = auth_service.register_oauth(auth_in=auth_details.registration)
-        # Create profile
-    session = auth_service.create_session(auth=auth)
     response = RedirectResponse(
         url=f"{settings.frontend_url_with_scheme}/home"
     )  # Subject to change, required as OAuth2 flow goes thru backend
-    set_cookie(response=response, key="session_id", value=session.session_id, max_age=31 * 60 * 60 * 24)
+    set_cookie(response=response, key="session_id", value=auth_details.session_id, max_age=31 * 60 * 60 * 24)
     return response

@@ -20,10 +20,10 @@ async def get_auth_service(repo: AuthRepository = Depends(get_auth_repo)) -> Aut
 
 async def get_current_id(request: Request, service: AuthService = Depends(get_auth_service)) -> UUID:
     session_id = request.state.session_id
-    auth = service.retrieve_auth_by_session(session_id=session_id)
-    if not auth:
+    auth_id = service.retrieve_auth_id_by_session(session_id=session_id)
+    if not auth_id:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
-    return auth.id
+    return auth_id
 
 
 CurrentId = Annotated[UUID, Depends(get_current_id)]
