@@ -2,6 +2,8 @@ import { EyeOff, Eye } from "lucide-react"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import Loading from "@/components/Loading"
+import { AuthAPI } from "@/api"
+import { useNavigate } from "react-router-dom"
 
 type TLoginForm = {
   email: string
@@ -10,6 +12,7 @@ type TLoginForm = {
 }
 
 const Login = () => {
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
 
   const {
@@ -25,8 +28,10 @@ const Login = () => {
     mode: "onBlur",
   })
 
-  const onSubmit = (data: TLoginForm) => {
-    console.log(data)
+  const onSubmit = async ({ email, password }: TLoginForm) => {
+    await AuthAPI.login({ email, password })
+      .then(() => navigate("/", { replace: true }))
+      .catch((err) => alert(err.message))
   }
 
   return (
