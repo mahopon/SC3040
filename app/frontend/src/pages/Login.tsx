@@ -12,6 +12,8 @@ type TLoginForm = {
 }
 
 const Login = () => {
+  // TBD: Check if already logged in
+
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
 

@@ -7,6 +7,7 @@ export const login = async (data: LoginProps): Promise<LoginResponse> => {
     const res = await http.post<LoginResponse>(API.AUTH.LOGIN, data)
     return res.data
   } catch (err) {
+    console.log(`login: ${err}`)
     throw new Error("Invalid credentials")
   }
 }
