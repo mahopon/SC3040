@@ -71,7 +71,7 @@ async def oauth_callback(request: Request, auth_service: AuthSvc, profile_servic
     new_profile = ProfileOAuthRegister(first_name=auth_details.first_name, last_name=auth_details.last_name)
     profile_service.oauth_process_profile(profile_id=auth_details.id, profile_new=new_profile)
     response = RedirectResponse(
-        url=f"{settings.frontend_url_with_scheme}/home"
+        url=f"{settings.frontend_url_with_scheme}"
     )  # Subject to change, required as OAuth2 flow goes thru backend
     set_cookie(response=response, key="session_id", value=auth_details.session_id, max_age=31 * 60 * 60 * 24)
     return response

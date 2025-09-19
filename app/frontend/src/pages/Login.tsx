@@ -1,9 +1,9 @@
 import { EyeOff, Eye } from "lucide-react"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom"
 import Loading from "@/components/Loading"
 import { AuthAPI } from "@/api"
-import { useNavigate } from "react-router-dom"
 
 type TLoginForm = {
   email: string
@@ -45,7 +45,7 @@ const Login = () => {
             </div>
             <span className="text-gray-800 font-medium text-xl">PawfectMatch</span>
           </div>
-          <button className="px-6 py-2 border-2 border-black text-black font-bold text-sm hover:bg-black hover:text-white transition-colors">
+          <button className="px-6 py-2 border-2 border-black text-black font-bold text-sm hover:bg-black hover:text-white transition-colors hover:cursor-pointer">
             SIGN UP
           </button>
         </header>
@@ -133,11 +133,45 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-black text-white py-3 px-4 rounded-md hover:bg-gray-800 transition-colors font-medium disabled:opacity-60"
+                className="w-full bg-black text-white py-3 px-4 rounded-md hover:bg-gray-800 transition-colors font-medium disabled:opacity-60 hover:cursor-pointer"
               >
                 {isSubmitting ? <Loading /> : "PROCEED"}
               </button>
             </form>
+
+            <div className="my-8 flex items-center">
+              <div className="flex-grow border-t border-gray-300" />
+              <span className="mx-4 text-sm">OR USE</span>
+              <div className="flex-grow border-t border-gray-300" />
+            </div>
+
+            <div className=" flex justify-center space-x-4">
+              <button
+                type="button"
+                onClick={() => AuthAPI.loginGoogle()}
+                className="flex items-center justify-center w-12 h-12 border border-gray-300 rounded-[50%] hover:bg-gray-200 hover:cursor-pointer"
+              >
+                <img
+                  src="https://www.svgrepo.com/show/475656/google-color.svg"
+                  alt="Google"
+                  className="w-6 h-6"
+                />
+              </button>
+              <button className="flex items-center justify-center w-12 h-12 border border-gray-300 rounded-[50%] hover:bg-gray-200 hover:cursor-pointer">
+                <img
+                  src="https://www.svgrepo.com/show/511330/apple-173.svg"
+                  alt="Apple"
+                  className="w-6 h-6"
+                />
+              </button>
+              <button className="flex items-center justify-center w-12 h-12 border border-gray-300 rounded-[50%] hover:bg-gray-200 hover:cursor-pointer">
+                <img
+                  src="https://www.svgrepo.com/show/452196/facebook-1.svg"
+                  alt="Facebook"
+                  className="w-6 h-6"
+                />
+              </button>
+            </div>
           </div>
         </div>
       </div>
