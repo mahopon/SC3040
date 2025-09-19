@@ -37,6 +37,9 @@ This is the backend of the SC3040 project.
 
    ```env
    APP_NAME=
+   FRONTEND_SCHEME=
+   FRONTEND_HOST=
+   FRONTEND_PORT=
    database_hostname=
    database_port=
    database_password=
