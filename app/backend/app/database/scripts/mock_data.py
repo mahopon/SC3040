@@ -10,11 +10,11 @@ from app.auth.models import Auth
 from app.profile.repository import ProfileRepository
 from app.profile.models import Profile
 from app.petowner.models import PetOwner
-from app.petowner.repository import create_petowner
+from app.petowner.repository import PetOwnerRepository
 from app.petcaretaker.models import PetCareTaker
-from app.petcaretaker.repository import create_petcaretaker
+from app.petcaretaker.repository import PetCareTakerRepository
 from app.pet.models import Pet
-from app.pet.repository import create_pet
+from app.pet.repository import PetRepository
 from app.service.models import Service, OfferedService
 from app.service.repository import (
     create_service,
@@ -33,6 +33,9 @@ password = "P@ssw0rd123!"
 session = next(get_db())
 auth_repo = AuthRepository(db_session=session)
 prof_repo = ProfileRepository(db_session=session)
+owner_repo = PetOwnerRepository(db_session=session)
+caretaker_repo = PetCareTakerRepository(db_session=session)
+pet_repo = PetRepository(db_session=session)
 # UUID generation
 uuids = [uuid4() for i in range(2)]
 # Auth + Profile + Pet Owner / Pet Care Taker
@@ -40,14 +43,23 @@ for i in range(2):
     auth = Auth(id=uuids[i], email=f"test{i}@gmail.com")
     auth.set_password(password)
     auth_repo.create_auth(auth_new=auth)
-    profile = Profile(id=uuids[i], name=f"test{i}", dob=datetime.now(), gender="Male")
+    profile = Profile(
+        id=uuids[i],
+        first_name=f"test{i}",
+        last_name=f"test{i}",
+        dob=datetime.now(),
+        gender="Male",
+        contact_num="12345678",
+        address="123 Ah Beng Road",
+        type="owner" if i == 0 else "caretaker",
+    )
     prof_repo.create_profile(profile_new=profile)
 owner = PetOwner(id=uuids[0])
-create_petowner(db_session=session, petowner_new=owner)
+owner_repo.create_petowner(petowner_new=owner)
 caretaker = PetCareTaker(id=uuids[1], yoe=5)
-create_petcaretaker(db_session=session, petcaretaker_new=caretaker)
+caretaker_repo.create_petcaretaker(petcaretaker_new=caretaker)
 pet = Pet(owner_id=uuids[0], name="Bob", age=10, species="Cat", breed="Munchkin")
-create_pet(db_session=session, pet_new=pet)
+pet_repo.create_pet(pet_new=pet)
 # Services
 services = [
     "Pet Walking",
