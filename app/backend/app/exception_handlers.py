@@ -36,4 +36,4 @@ def register_exception_handlers(app: FastAPI) -> None:
     app.add_exception_handler(ProfileAlreadyOnboarded, profile_onboarded_exception_handler)  # type: ignore[arg-type]
     app.add_exception_handler(ProfileAlreadyExists, profile_exists_exception_handler)  # type: ignore[arg-type]
     # PetCareTaker
-    app.add_exception_handler(PetCareTakerNotFound, petcaretaker_not_found_exception_handler)
+    app.add_exception_handler(PetCareTakerNotFound, petcaretaker_not_found_exception_handler)  # type: ignore[arg-type]
