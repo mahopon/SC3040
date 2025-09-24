@@ -1,6 +1,6 @@
 # tests/test_auth_service.py
 import pytest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 from uuid import uuid4
 from app.auth.service import AuthService
 from app.auth.models import Auth, AuthSession
@@ -21,7 +21,7 @@ def auth_service(mock_repo):
 
 
 def test_login_success(auth_service, mock_repo):
-    auth = Auth(email="test@test.com")
+    auth = Auth(id=uuid4(), email="test@test.com")
     auth.verify_password = MagicMock(return_value=True)
     mock_repo.get_by_email.return_value = auth
 
@@ -64,16 +64,22 @@ def test_register_success(auth_service, mock_repo):
     auth_in = AuthRegister(
         email="new@test.com",
         password="P@ssw0rd123!",
-        name="Tester",
+        first_name="Tester",
         dob=datetime.now() - timedelta(days=365 * 18),
         gender="male",
     )
     auth_service.repo.create_auth = MagicMock()
 
-    auth_service.register(auth_in=auth_in)
+    with patch("app.auth.service.Auth", spec=Auth) as AuthMock:
+        auth_instance = AuthMock.return_value
+        auth_instance.set_password = MagicMock()
+        auth_instance.id = uuid4()
+
+        auth_service.register(auth_in=auth_in)
 
     auth_service.repo.create_auth.assert_called_once()
     auth_service.repo.get_by_email.assert_called_once_with(auth_in.email)
+    auth_instance.set_password.assert_called_once_with(auth_in.password.get_secret_value())
 
 
 def test_register_existing_email(auth_service, mock_repo):
@@ -81,7 +87,7 @@ def test_register_existing_email(auth_service, mock_repo):
     auth_in = AuthRegister(
         email="exists@test.com",
         password="P@ssw0rd123!",
-        name="Tester",
+        first_name="Tester",
         dob=datetime.now() - timedelta(days=365 * 18),
         gender="male",
     )
@@ -93,7 +99,7 @@ def test_register_existing_email(auth_service, mock_repo):
 
 
 def test_register_oauth(auth_service, mock_repo):
-    auth_in = OAuthRegister(email="oauth@test.com", name="User")
+    auth_in = OAuthRegister(email="oauth@test.com", first_name="User", last_name="User")
     auth_service.repo.create_auth = MagicMock()
 
     result = auth_service._register_oauth(auth_in=auth_in)
