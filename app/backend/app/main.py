@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.requests import Request
+from fastapi.staticfiles import StaticFiles
 from .api import router
 from .exception_handlers import register_exception_handlers
 from starlette.middleware.sessions import SessionMiddleware
@@ -10,6 +11,7 @@ from contextlib import asynccontextmanager
 from .config import get_settings
 from typing import AsyncGenerator
 from secrets import token_urlsafe
+import os
 
 settings = get_settings()
 
@@ -35,6 +37,9 @@ app.add_middleware(AuthMiddleware)
 app.add_middleware(ResponseTimeMiddleware)
 app.include_router(router)
 register_exception_handlers(app)
+
+os.makedirs("resources/uploads", exist_ok=True)
+app.mount("/resources/profile", StaticFiles(directory="app/resources/uploads"), name="profile_pics")
 
 
 @app.get("/")
