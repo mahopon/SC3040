@@ -75,3 +75,12 @@ async def oauth_callback(request: Request, auth_service: AuthSvc, profile_servic
     )  # Subject to change, required as OAuth2 flow goes thru backend
     set_cookie(response=response, key="session_id", value=auth_details.session_id, max_age=31 * 60 * 60 * 24)
     return response
+
+
+@auth_router.post("/logout")
+def logout(request: Request, auth_service: AuthSvc) -> Response:
+    session_id = request.cookies.get("session_id")
+    auth_service.logout(session_id=session_id)
+    resp = Response(status_code=status.HTTP_200_OK)
+    resp.delete_cookie(key="session_id")
+    return resp

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from .models import Auth, AuthSession
 from uuid import UUID
 from app.util.repository import get_by_field, db_add
@@ -26,3 +26,7 @@ class AuthRepository:
 
     def create_session(self, session_new: AuthSession) -> None:
         db_add(self.db_session, session_new)
+
+    def delete_session(self, session_id: str) -> None:
+        stmt = delete(AuthSession).where(AuthSession.id == session_id)
+        self.db_session.execute(stmt)

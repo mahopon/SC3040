@@ -77,6 +77,11 @@ class AuthService(InternalAuthService):
         session = self._create_session(auth=auth)
         return OAuthLoginResponse(id=auth.id, session_id=session.session_id, first_name=first_name, last_name=last_name)
 
+    def logout(self, *, session_id: str) -> None:
+        if not self.repo.get_by_session_id(session_id=session_id):
+            raise InvalidCredentials("Session ID doesn't exist")
+        self.repo.delete_session(session_id=session_id)
+
     def _register_oauth(self, *, auth_in: OAuthRegister) -> Auth:
         new_auth = Auth(**auth_in.model_dump(exclude={"first_name", "last_name"}))
         self.repo.create_auth(new_auth)
