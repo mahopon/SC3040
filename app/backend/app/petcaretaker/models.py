@@ -2,6 +2,7 @@ from app.database.core import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey
 from uuid import UUID
+from app.profile.models import Profile
 
 
 class PetCareTaker(Base):
@@ -10,4 +11,3 @@ class PetCareTaker(Base):
 
     profile: Mapped["Profile"] = relationship(back_populates="petcaretaker")  # noqa
     offered_services: Mapped[list["OfferedService"]] = relationship(back_populates="petcaretaker")  # noqa
-    __mapper_args__ = {"polymorphic_identity": "caretaker"}

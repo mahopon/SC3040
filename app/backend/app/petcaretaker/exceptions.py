@@ -1,0 +1,2 @@
+class PetCareTakerNotFound(Exception):
+    pass
