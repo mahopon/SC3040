@@ -5,7 +5,7 @@ from .schemas import (
     Profile as ProfileDTO,
     ProfileOAuthRegister,
     ProfileUpdate,
-    ProfileInitialUpdate,
+    ProfileOnboard,
 )
 
 from .models import Profile
@@ -44,11 +44,11 @@ class ProfileService(InternalProfileService):
         profile.id = profile_id
         self.repo.create_profile(profile_new=profile)
 
-    def initial_update_profile(self, *, profile_id: UUID, profile_update: ProfileInitialUpdate) -> None:
+    def onboard_profile(self, *, profile_id: UUID, profile_update: ProfileOnboard) -> None:
         profile = self.repo.get_by_id(profile_id=profile_id)
         if not profile:
             raise ProfileNotExists("Profile doesn't exist")
-        if profile.setup:
+        if profile.onboarded:
             raise ProfileAlreadyOnboarded("Profile has already completed onboarding")
         self.repo.onboard_profile(profile_id=profile.id, profile_update=profile_update)
 
@@ -57,3 +57,12 @@ class ProfileService(InternalProfileService):
         if not profile:
             raise ProfileNotExists("Profile doesn't exist")
         self.repo.update_profile(profile_id=profile.id, profile_update=profile_update)
+
+    def complete_onboard(self, *, profile_id: UUID) -> None:
+        self.repo.update_onboarding(profile_id=profile_id, status=True)
+
+    def check_onboarding_status(self, *, profile_id: UUID) -> bool:
+        profile = self.repo.get_by_id(profile_id=profile_id)
+        if not profile:
+            raise ProfileNotExists("Profile doesn't exist")
+        return profile.onboarded

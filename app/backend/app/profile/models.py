@@ -24,7 +24,7 @@ class Profile(Base):
     gender: Mapped[Gender] = mapped_column(nullable=True)
     contact_num: Mapped[str] = mapped_column(nullable=True)
     address: Mapped[str] = mapped_column(nullable=True)
-    setup: Mapped[bool] = mapped_column(default=False, server_default=text("false"))
+    onboarded: Mapped[bool] = mapped_column(default=False, server_default=text("false"))
     type: Mapped[str] = mapped_column(nullable=False, default="profile")
     profile_picture: Mapped[str] = mapped_column(nullable=True)
 

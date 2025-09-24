@@ -2,7 +2,6 @@ from pydantic import BaseModel, StringConstraints, field_validator
 from typing import Optional, Literal, Annotated
 from datetime import datetime
 from .enums import Gender
-from app.pet.schemas import PetCreate
 
 
 class Profile(BaseModel):
@@ -48,7 +47,7 @@ class ProfileOAuthRegister(ProfileAuthRegister):
     pass
 
 
-class ProfileInitialUpdateRequest(BaseModel):
+class ProfileOnboardRequest(BaseModel):
     first_name: str
     last_name: str
     dob: datetime
@@ -57,10 +56,9 @@ class ProfileInitialUpdateRequest(BaseModel):
     address: str
     type: Literal["owner", "caretaker"]
     yoe: Optional[int] = None
-    pet: Optional[PetCreate] = None
 
 
-class ProfileInitialUpdate(BaseModel):
+class ProfileOnboard(BaseModel):
     first_name: str
     last_name: str
     dob: datetime
