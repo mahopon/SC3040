@@ -1,5 +1,5 @@
 from app.database.core import Base
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from uuid import UUID
 from datetime import datetime
@@ -18,11 +18,15 @@ class Profile(Base):
     """
 
     id: Mapped[UUID] = mapped_column(ForeignKey("auth.id", ondelete="CASCADE"), primary_key=True)
-    name: Mapped[str] = mapped_column(nullable=False)
+    first_name: Mapped[str] = mapped_column(nullable=False)
+    last_name: Mapped[str] = mapped_column(nullable=True)
     dob: Mapped[datetime] = mapped_column(nullable=True)
     gender: Mapped[Gender] = mapped_column(nullable=True)
+    contact_num: Mapped[str] = mapped_column(nullable=True)
+    address: Mapped[str] = mapped_column(nullable=True)
+    setup: Mapped[bool] = mapped_column(default=False, server_default=text("false"))
+    type: Mapped[str] = mapped_column(nullable=False, default="profile")
+    profile_picture: Mapped[str] = mapped_column(nullable=True)
 
-    petowner: Mapped["PetOwner"] = relationship(back_populates="profile")  # noqa
-    petcaretaker: Mapped["PetCareTaker"] = relationship(back_populates="profile")  # noqa
-
-    __mapper_args__ = {"polymorphic_identity": "user"}
+    petowner: Mapped["PetOwner"] = relationship(back_populates="profile", lazy="joined")  # noqa
+    petcaretaker: Mapped["PetCareTaker"] = relationship(back_populates="profile", lazy="joined")  # noqa

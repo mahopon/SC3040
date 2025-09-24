@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import update
 from .models import Profile
-from .schemas import ProfileSetup
+from .schemas import ProfileInitialUpdate, ProfileUpdate
 from uuid import UUID
-from app.util.repository import get_by_field, db_add
+from app.util.repository import db_add, get_by_field
 
 
 class ProfileRepository:
@@ -16,6 +16,12 @@ class ProfileRepository:
     def create_profile(self, profile_new: Profile) -> None:
         db_add(self.db_session, profile_new)
 
-    def update_initial(self, profile_setup: ProfileSetup) -> None:
-        stmt = update(Profile).where(Profile.id == profile_setup.id).values(**profile_setup.model_dump())
+    def onboard_profile(self, profile_id: UUID, profile_update: ProfileInitialUpdate) -> None:
+        values = profile_update.model_dump()
+        stmt = update(Profile).where(Profile.id == profile_id).values(**values, setup=(Profile.setup | True))  # noqa
+        self.db_session.execute(stmt)
+
+    def update_profile(self, profile_id: UUID, profile_update: ProfileUpdate) -> None:
+        values = profile_update.model_dump(exclude_unset=True)
+        stmt = update(Profile).where(Profile.id == profile_id).values(**values)
         self.db_session.execute(stmt)

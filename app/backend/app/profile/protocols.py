@@ -1,0 +1,16 @@
+from typing import Protocol
+from .schemas import Profile, ProfileAuthRegister, ProfileOAuthRegister, ProfileUpdate, ProfileInitialUpdate
+from uuid import UUID
+
+
+class ExternalProfileService(Protocol):
+    def register_profile(
+        self, *, profile_id: UUID, profile_new: ProfileAuthRegister | ProfileOAuthRegister
+    ) -> None: ...
+    def get_profile(self, *, profile_id: UUID) -> Profile: ...
+    def oauth_process_profile(self, *, profile_id: UUID, profile_new: ProfileOAuthRegister) -> None: ...
+
+
+class InternalProfileService(ExternalProfileService, Protocol):
+    def update_profile(self, *, profile_id: UUID, profile_update: ProfileUpdate) -> None: ...
+    def initial_update_profile(self, *, profile_id: UUID, profile_update: ProfileInitialUpdate) -> None: ...
