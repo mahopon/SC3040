@@ -27,4 +27,4 @@ async def get_current_id(request: Request, service: AuthService = Depends(get_au
 
 
 CurrentId = Annotated[UUID, Depends(get_current_id)]
-AuthSvc = Annotated[AuthService, Depends(get_auth_service)]
+InternalAuthSvc = Annotated[AuthService, Depends(get_auth_service)]

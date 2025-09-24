@@ -1,4 +1,11 @@
-from .schemas import AuthRegister, AuthPasswordUpdate, OAuthLoginResponse, OAuthRegister, AuthLoginResponse
+from .schemas import (
+    AuthRegister,
+    AuthPasswordUpdate,
+    OAuthLoginResponse,
+    OAuthRegister,
+    AuthLoginResponse,
+    AuthRegisterResponse as AuthDTO,
+)
 from .models import Auth, AuthSession
 from uuid import UUID
 from authlib.integrations.starlette_client import OAuth
@@ -12,7 +19,7 @@ class InternalAuthService(Protocol):
 
     def retrieve_auth_id_by_session(self, *, session_id: str) -> UUID: ...
 
-    def register(self, *, auth_in: AuthRegister) -> None: ...
+    def register(self, *, auth_in: AuthRegister) -> AuthDTO: ...
 
     def _register_oauth(self, *, auth_in: OAuthRegister) -> Auth: ...
 

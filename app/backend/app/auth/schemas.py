@@ -2,6 +2,7 @@ from pydantic import BaseModel, SecretStr, field_validator, StringConstraints, E
 from datetime import datetime, timezone
 from typing import Optional, Annotated
 from app.profile.enums import Gender
+from uuid import UUID
 
 
 class AuthLogin(BaseModel):
@@ -25,7 +26,7 @@ class AuthLogin(BaseModel):
 
 
 class AuthRegister(AuthLogin):
-    name: Annotated[str, StringConstraints(min_length=3)]
+    first_name: Annotated[str, StringConstraints(min_length=3)]
     dob: datetime
     gender: Gender
 
@@ -37,6 +38,7 @@ class AuthRegister(AuthLogin):
 
 
 class AuthLoginResponse(BaseModel):
+    id: UUID
     session_id: str
 
 
@@ -60,13 +62,19 @@ class AuthPasswordUpdate(BaseModel):
         return v
 
 
+class AuthRegisterResponse(BaseModel):
+    id: UUID
+
+
 class OAuthRegister(BaseModel):
     email: str
-    name: str
+    first_name: str
+    last_name: str
 
 
 class OAuthLoginResponse(AuthLoginResponse):
-    pass
+    first_name: str
+    last_name: str
 
 
 class OAuthProvider(BaseModel):
