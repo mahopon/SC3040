@@ -80,6 +80,8 @@ async def oauth_callback(request: Request, auth_service: AuthSvc, profile_servic
 @auth_router.post("/logout")
 def logout(request: Request, auth_service: AuthSvc) -> Response:
     session_id = request.cookies.get("session_id")
+    if not session_id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid session ID")
     auth_service.logout(session_id=session_id)
     resp = Response(status_code=status.HTTP_200_OK)
     resp.delete_cookie(key="session_id")
