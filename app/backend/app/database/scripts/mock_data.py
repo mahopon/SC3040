@@ -16,10 +16,7 @@ from app.petcaretaker.repository import PetCareTakerRepository
 from app.pet.models import Pet
 from app.pet.repository import PetRepository
 from app.service.models import Service, OfferedService
-from app.service.repository import (
-    create_service,
-    create_offered_service,
-)
+from app.service.repository import ServiceRepository
 from app.location.models import Location
 from app.location.repository import create_location
 from datetime import datetime
@@ -36,6 +33,7 @@ prof_repo = ProfileRepository(db_session=session)
 owner_repo = PetOwnerRepository(db_session=session)
 caretaker_repo = PetCareTakerRepository(db_session=session)
 pet_repo = PetRepository(db_session=session)
+service_repo = ServiceRepository(db_session=session)
 # UUID generation
 uuids = [uuid4() for i in range(2)]
 # Auth + Profile + Pet Owner / Pet Care Taker
@@ -72,7 +70,7 @@ services = [
 ]
 for name in services:
     service = Service(name=name)
-    create_service(db_session=session, service_new=service)
+    service_repo.create_service(service_new=service)
 # Locations
 locations = [
     "Dhoby Ghaut",
@@ -163,7 +161,7 @@ for i in range(1, 4):
     offered_svc = OfferedService(service_id=i, caretaker_id=uuids[1], rate=50, day=["Monday", "Tuesday", "Wednesday"])
     for o in range(1, 4):
         offered_svc.locations.append(locs[o])
-    create_offered_service(db_session=session, offered_service_new=offered_svc)
+    service_repo.create_offered_service(offered_service_new=offered_svc)
 
 # Commit the transaction
 print("Committing changes to the database...")  # Debugging print
