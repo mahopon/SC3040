@@ -10,5 +10,3 @@ class PetOwner(Base):
     # TODO Add relationships for Location, Payment
     profile: Mapped["Profile"] = relationship(back_populates="petowner")  # noqa
     pets: Mapped[list["Pet"]] = relationship(back_populates="owner")  # noqa
-
-    __mapper_args__ = {"polymorphic_identity": "owner"}
