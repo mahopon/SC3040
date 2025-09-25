@@ -14,5 +14,5 @@ async def get_service_service(repo: ServiceRepository = Depends(get_service_repo
     return ServiceService(repo=repo)
 
 
-InternalServiceSvc = Annotated[InternalServiceService, Depends(get_service_repo)]
-ExternalServiceSvc = Annotated[ExternalServiceService, Depends(get_service_repo)]
+InternalServiceSvc = Annotated[InternalServiceService, Depends(get_service_service)]
+ExternalServiceSvc = Annotated[ExternalServiceService, Depends(get_service_service)]
