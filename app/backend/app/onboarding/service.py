@@ -31,6 +31,8 @@ class OnboardingService(InternalOnboardingService):
         self.service_service = service_service
 
     def onboard_profile(self, *, profile_id: UUID, onboard_req: ProfileOnboardRequest) -> None:
+        if self.profile_service.check_onboarding_status(profile_id=profile_id):
+            raise ProfileAlreadyOnboarded("Profile has completed onboarding")
         profile_onboard = ProfileOnboard(**onboard_req.model_dump(exclude={"yoe"}))
         self.profile_service.onboard_profile(profile_id=profile_id, profile_update=profile_onboard)
 
