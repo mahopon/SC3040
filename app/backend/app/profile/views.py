@@ -4,9 +4,10 @@ from .enums import Role
 from .dependency import InternalProfileSvc as ProfileSvc
 from app.auth.dependency import CurrentId
 from fastapi.responses import JSONResponse, Response
-from .schemas import ProfileUpdate, ProfileUpdateRequest
+from .schemas import ProfileUpdate, ProfileUpdateRequest, ProfileGetResponse
 from app.petcaretaker.dependency import ExternalPetCareTakerSvc as PetCareTakerSvc
 from app.petcaretaker.schemas import PetCareTakerUpdate
+from uuid import UUID
 
 profile_router = APIRouter()
 
@@ -16,6 +17,13 @@ def get_profile(id: CurrentId, profile_service: ProfileSvc) -> JSONResponse:
     profile = profile_service.get_profile(profile_id=id)
     content = jsonable_encoder(profile.model_dump(exclude_none=True))
     return JSONResponse(status_code=status.HTTP_200_OK, content=content)
+
+
+@profile_router.get("/{profile_id}")
+def get_profile_by_id(profile_id: UUID, profile_service: ProfileSvc) -> JSONResponse:
+    profile = profile_service.get_profile(profile_id=profile_id)
+    profile_content = ProfileGetResponse(**profile.model_dump())
+    return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(profile_content))
 
 
 @profile_router.patch("/update")

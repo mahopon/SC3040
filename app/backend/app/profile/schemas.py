@@ -137,3 +137,12 @@ class ProfileOnboard(BaseModel):
     contact_num: str
     address: str
     type: Literal["owner", "caretaker"]
+
+
+class ProfileGetResponse(BaseModel):
+    """
+    Schema representing profile data retrieved for displaying to other users
+    """
+
+    first_name: str
+    last_name: str
