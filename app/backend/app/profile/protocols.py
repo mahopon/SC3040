@@ -1,6 +1,7 @@
 from typing import Protocol
 from .schemas import Profile, ProfileAuthRegister, ProfileOAuthRegister, ProfileUpdate, ProfileOnboard
 from uuid import UUID
+from fastapi import UploadFile
 
 
 class ExternalProfileService(Protocol):
@@ -82,4 +83,15 @@ class InternalProfileService(ExternalProfileService, Protocol):
         Args:
             profile_id (UUID): The profile ID.
             profile_update (ProfileUpdate): Updated profile data.
+        """
+
+    def change_profile_picture(self, *, profile_id: UUID, file: UploadFile) -> str:
+        """
+        UPdates an existing profile's profile image
+
+        Args:
+            profile_id (UUID): The profile ID.
+            file (UploadFIle): Uploaded image file
+        Returns:
+            str: New file path of image
         """

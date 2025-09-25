@@ -1,9 +1,10 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, File, UploadFile
 from fastapi.encoders import jsonable_encoder
 from .enums import Role
 from .dependency import InternalProfileSvc as ProfileSvc
 from app.auth.dependency import CurrentId
 from fastapi.responses import JSONResponse, Response
+from fastapi.exceptions import HTTPException
 from .schemas import ProfileUpdate, ProfileUpdateRequest, ProfileGetResponse
 from app.petcaretaker.dependency import ExternalPetCareTakerSvc as PetCareTakerSvc
 from app.petcaretaker.schemas import PetCareTakerUpdate
@@ -26,7 +27,7 @@ def get_profile_by_id(profile_id: UUID, profile_service: ProfileSvc) -> JSONResp
     return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(profile_content))
 
 
-@profile_router.patch("/update")
+@profile_router.put("/update")
 def update_profile(
     id: CurrentId,
     profile_update: ProfileUpdateRequest,
@@ -41,3 +42,11 @@ def update_profile(
             petcaretaker_update = PetCareTakerUpdate(yoe=profile_update.yoe)
             petcaretaker_service.update_petcaretaker(petcaretaker_id=id, petcaretaker_update=petcaretaker_update)
     return Response(status_code=status.HTTP_200_OK)
+
+
+@profile_router.patch("/picture")
+def change_profile_picture(id: CurrentId, profile_service: ProfileSvc, image: UploadFile = File(...)) -> JSONResponse:
+    if image.content_type is None or not image.content_type.startswith("image/"):
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Only images are allowed")
+    path = profile_service.change_profile_picture(profile_id=id, file=image)
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"image_path": path})

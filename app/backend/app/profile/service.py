@@ -10,6 +10,13 @@ from .schemas import (
 from .models import Profile
 from uuid import UUID
 from .exceptions import ProfileAlreadyExists, ProfileNotExists, ProfileAlreadyOnboarded
+from fastapi import UploadFile
+import os
+import shutil
+from uuid import uuid4
+
+UPLOAD_DIR = "app/resources/uploads/profile"
+BASE_URL = "/resources/profile"
 
 
 class ProfileService(InternalProfileService):
@@ -67,7 +74,6 @@ class ProfileService(InternalProfileService):
         if not profile:
             raise ProfileNotExists("Profile doesn't exist")
         return_profile = ProfileDTO.model_validate(profile)
-        # Include years of experience if caretaker
         if profile.type == "caretaker" and hasattr(profile, "petcaretaker"):
             return_profile.yoe = profile.petcaretaker.yoe
         return return_profile
@@ -127,14 +133,8 @@ class ProfileService(InternalProfileService):
         Args:
             profile_id (UUID): ID of the profile to update.
             profile_update (ProfileUpdate): Fields to update.
-
-        Raises:
-            ProfileNotExists: If the profile does not exist.
         """
-        profile = self.repo.get_by_id(profile_id)
-        if not profile:
-            raise ProfileNotExists("Profile doesn't exist")
-        self.repo.update_profile(profile_id=profile.id, profile_update=profile_update)
+        self.repo.update_profile(profile_id=profile_id, profile_update=profile_update)
 
     def complete_onboard(self, *, profile_id: UUID) -> None:
         """
@@ -162,3 +162,20 @@ class ProfileService(InternalProfileService):
         if not profile:
             raise ProfileNotExists("Profile doesn't exist")
         return profile.onboarded
+
+    def change_profile_picture(self, *, profile_id: UUID, file: UploadFile) -> str:
+        """
+        Updates profile_picture field of Profile entity
+
+        Args:
+            profile_id (UUID): ID of the profile
+            file (UploadFile): Image file
+        """
+        filename = f"{uuid4()}_{file.filename}"
+        file_path = os.path.join(UPLOAD_DIR, filename)
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+
+        file_url = f"{BASE_URL}/{filename}"
+        self.repo.update_profile_picture(profile_id=profile_id, path=file_url)
+        return file_url

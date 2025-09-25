@@ -29,3 +29,7 @@ class ProfileRepository:
     def update_onboarding(self, profile_id: UUID, status: bool) -> None:
         stmt = update(Profile).where(Profile.id == profile_id).values(onboarded=status)
         self.db_session.execute(stmt)
+
+    def update_profile_picture(self, profile_id: UUID, path: str) -> None:
+        stmt = update(Profile).where(Profile.id == profile_id).values(profile_picture=path)
+        self.db_session.execute(stmt)
