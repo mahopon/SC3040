@@ -25,3 +25,6 @@ class PetCareTakerService(InternalPetCareTakerService):
         if not petcaretaker:
             raise PetCareTakerNotFound("PetCareTaker not found")
         self.repo.update_petcaretaker(petcaretaker_id=petcaretaker_id, petcaretaker_update=petcaretaker_update)
+
+    def delete_petcaretaker(self, *, petcaretaker_id: UUID) -> None:
+        self.repo.delete_petcaretaker(petcaretaker_id=petcaretaker_id)
