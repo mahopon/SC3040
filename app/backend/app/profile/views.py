@@ -1,13 +1,10 @@
 from fastapi import APIRouter, status
 from fastapi.encoders import jsonable_encoder
+from .enums import Role
 from .dependency import InternalProfileSvc as ProfileSvc
 from app.auth.dependency import CurrentId
 from fastapi.responses import JSONResponse, Response
-from .schemas import (
-    ProfileUpdate,
-    ProfileCareTakerUpdate,
-    ProfileOwnerUpdate,
-)
+from .schemas import ProfileUpdate, ProfileUpdateRequest
 from app.petcaretaker.dependency import ExternalPetCareTakerSvc as PetCareTakerSvc
 from app.petcaretaker.schemas import PetCareTakerUpdate
 
@@ -21,30 +18,18 @@ def get_profile(id: CurrentId, profile_service: ProfileSvc) -> JSONResponse:
     return JSONResponse(status_code=status.HTTP_200_OK, content=content)
 
 
-@profile_router.patch("/caretaker")
-def update_caretaker_profile(
+@profile_router.patch("/update")
+def update_profile(
     id: CurrentId,
+    profile_update: ProfileUpdateRequest,
     profile_service: ProfileSvc,
     petcaretaker_service: PetCareTakerSvc,
-    profile_update_req: ProfileCareTakerUpdate,
 ) -> Response:
-    profile_full_update = profile_update_req.model_dump()
-    profile_update_cols = list(ProfileUpdate.model_fields.keys())
-    profile_caretaker_cols = [key for key in profile_update_cols if key not in profile_update_cols]
-    profile_update = {key: profile_full_update[key] for key in profile_update_cols}
-    profile_caretaker_update = {key: profile_full_update[key] for key in profile_caretaker_cols}
-    profile_service.update_profile(profile_id=id, profile_update=ProfileUpdate(**profile_update))
-    if profile_caretaker_update["yoe"] is not None:
-        petcaretaker_service.update_petcaretaker(
-            petcaretaker_id=id, petcaretaker_update=PetCareTakerUpdate(**profile_caretaker_update)
-        )
-    return Response(status_code=status.HTTP_200_OK)
-
-
-@profile_router.patch("/owner")
-def update_owner_profile(
-    id: CurrentId, profile_service: ProfileSvc, profile_update_req: ProfileOwnerUpdate
-) -> Response:
-    profile_update = ProfileUpdate(**profile_update_req.model_dump())
-    profile_service.update_profile(profile_id=id, profile_update=profile_update)
+    profile = profile_service.get_profile(profile_id=id)
+    update = ProfileUpdate(**profile.model_dump(exclude={"yoe"}, exclude_unset=True, exclude_none=True))
+    profile_service.update_profile(profile_id=id, profile_update=update)
+    if profile.type == Role.PetCareTaker.value:
+        if profile_update.yoe is not None:
+            petcaretaker_update = PetCareTakerUpdate(yoe=profile_update.yoe)
+            petcaretaker_service.update_petcaretaker(petcaretaker_id=id, petcaretaker_update=petcaretaker_update)
     return Response(status_code=status.HTTP_200_OK)

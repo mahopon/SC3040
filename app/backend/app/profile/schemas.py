@@ -29,18 +29,14 @@ class ProfileUpdate(BaseModel):
     address: Optional[str] = None
 
 
-class ProfileCareTakerUpdate(ProfileUpdate):
-    yoe: Optional[str] = None
+class ProfileUpdateRequest(ProfileUpdate):
+    yoe: Optional[int] = None
 
     @field_validator("yoe")
     def yoe_gt_zero(cls, value: int) -> int:
         if value < 0:
             raise ValueError("Years of experience(yoe) must be greater or equal to 0")
         return value
-
-
-class ProfileOwnerUpdate(ProfileUpdate):
-    pass
 
 
 class ProfileOAuthRegister(ProfileAuthRegister):
