@@ -22,7 +22,7 @@ class PetCareTakerService(InternalPetCareTakerService):
         """
         self.repo = repo
 
-    def get_petcaretaker(self, *, petcaretaker_id: UUID) -> PetCareTaker:
+    def get_petcaretaker(self, *, petcaretaker_id: UUID) -> PetCareTakerDTO:
         """
         Retrieve a PetCareTaker by ID.
 
@@ -35,7 +35,7 @@ class PetCareTakerService(InternalPetCareTakerService):
         petcaretaker = self.repo.get_petcaretaker_by_id(petcaretaker_id=petcaretaker_id)
         if not petcaretaker:
             raise PetCareTakerNotFound("PetCareTaker not found")
-        return PetCareTaker.model_validate(petcaretaker.dict())
+        return PetCareTakerDTO.model_validate(petcaretaker.dict())
 
     def create_petcaretaker(self, *, petcaretaker_new: PetCareTakerCreate) -> None:
         """
