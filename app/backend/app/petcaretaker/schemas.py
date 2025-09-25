@@ -3,6 +3,14 @@ from uuid import UUID
 
 
 class PetCareTaker(BaseModel):
+    """
+    Schema representing a PetCareTaker.
+
+    Attributes:
+        id (UUID): ID of the PetCareTaker.
+        yoe (int): Years of experience. Must be >= 0.
+    """
+
     id: UUID
     yoe: int
 
@@ -14,10 +22,22 @@ class PetCareTaker(BaseModel):
 
 
 class PetCareTakerCreate(PetCareTaker):
+    """
+    Schema for creating a new PetCareTaker.
+    Inherits all fields from PetCareTaker.
+    """
+
     pass
 
 
 class PetCareTakerUpdate(BaseModel):
+    """
+    Schema for updating a PetCareTaker's information.
+
+    Attributes:
+        yoe (int): Updated years of experience. Must be >= 0.
+    """
+
     yoe: int
 
     @field_validator("yoe")
