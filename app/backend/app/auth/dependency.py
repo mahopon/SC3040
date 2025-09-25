@@ -8,12 +8,10 @@ from uuid import UUID
 from typing import Annotated
 
 
-# Provide repository per request
 async def get_auth_repo(db_session: DbSession) -> AuthRepository:
     return AuthRepository(db_session)
 
 
-# Provide service per request
 async def get_auth_service(repo: AuthRepository = Depends(get_auth_repo)) -> AuthService:
     return AuthService(repo)
 

@@ -7,12 +7,6 @@ from uuid import UUID, uuid4
 import secrets
 
 
-"""
- *
- * @author Chong Yao
-"""
-
-
 def hash_password(password: str) -> bytes:
     """Hash a password using bcrypt."""
     pw = password.encode("utf-8")
