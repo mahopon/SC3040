@@ -5,8 +5,17 @@ from uuid import UUID
 
 
 class PetOwner(Base):
+    """
+    Represents a pet owner in the system.
+
+    Attributes:
+        id (UUID): Primary key, foreign key referencing `profile.id`.
+        profile (Profile): Relationship to the user's profile.
+        pets (list[Pet]): List of pets owned by this PetOwner.
+    """
+
     id: Mapped[UUID] = mapped_column(ForeignKey("profile.id", ondelete="CASCADE"), primary_key=True)
 
-    # TODO Add relationships for Location, Payment
+    # Relationships
     profile: Mapped["Profile"] = relationship(back_populates="petowner")  # noqa
     pets: Mapped[list["Pet"]] = relationship(back_populates="owner")  # noqa
