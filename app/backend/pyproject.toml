@@ -17,6 +17,7 @@ dependencies = [
     "types-authlib>=1.6.2.20250825",
     "types-psycopg2>=2.9.21.20250809",
     "uvicorn>=0.35.0",
+    "python-multipart>=0.0.20",
 ]
 
 [dependency-groups]
