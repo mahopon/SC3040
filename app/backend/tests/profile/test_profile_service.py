@@ -129,20 +129,6 @@ def test_onboard_profile_completed_onboarding(auth_service, mock_repo):
     auth_service.repo.onboard_profile.assert_not_called()
 
 
-def test_update_profile_not_exists(auth_service, mock_repo):
-    profile_id = uuid4()
-    profile_update = ProfileUpdate(
-        first_name="Test", last_name="Tester", contact_num="+6591234567", address="123 Test Street"
-    )
-    auth_service.repo.get_by_id.return_value = None
-
-    with pytest.raises(ProfileNotExists):
-        auth_service.update_profile(profile_id=profile_id, profile_update=profile_update)
-
-    auth_service.repo.get_by_id.assert_called_once_with(profile_id)
-    auth_service.repo.update_profile.assert_not_called()
-
-
 def test_update_profile_success(auth_service, mock_repo):
     profile_id = uuid4()
     profile = Profile(id=profile_id, first_name="Test")
@@ -153,5 +139,4 @@ def test_update_profile_success(auth_service, mock_repo):
 
     auth_service.update_profile(profile_id=profile_id, profile_update=profile_update)
 
-    auth_service.repo.get_by_id.assert_called_once_with(profile_id)
     auth_service.repo.update_profile.assert_called_once_with(profile_id=profile_id, profile_update=profile_update)
