@@ -38,8 +38,8 @@ app.add_middleware(ResponseTimeMiddleware)
 app.include_router(router)
 register_exception_handlers(app)
 
-os.makedirs("app/resources/uploads", exist_ok=True)
-app.mount("/resources/profile", StaticFiles(directory="app/resources/uploads"), name="profile_pics")
+os.makedirs("app/resources/uploads/profile", exist_ok=True)
+app.mount("/resources/profile", StaticFiles(directory="app/resources/uploads/profile"), name="profile_pics")
 
 
 @app.get("/")
