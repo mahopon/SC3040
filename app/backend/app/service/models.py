@@ -46,7 +46,7 @@ class OfferedService(Base):
     service: Mapped["Service"] = relationship(back_populates="offered_services")
     service_bookings: Mapped[list["ServiceBooking"]] = relationship(back_populates="offered_service")
     petcaretaker: Mapped["PetCareTaker"] = relationship(back_populates="offered_services")  # noqa
-    locations: Mapped[list["Location"]] = relationship(
+    locations: Mapped[list["Location"]] = relationship(  # noqa
         secondary="offered_service_location", back_populates="offered_services"
     )
 
