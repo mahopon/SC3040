@@ -2,7 +2,7 @@ from fastapi import APIRouter, status, Path
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from .dependency import InternalServiceSvc as ServiceSvc
-from .schemas import OfferedServiceCreate
+from .schemas import OfferedServiceCreate, OfferedServiceUpdate
 from uuid import UUID
 from app.auth.dependency import CurrentId
 
@@ -33,8 +33,8 @@ def create_offered_service(id: CurrentId, service_service: ServiceSvc, new_offer
 
 @offered_service_router.put("/{offered_svc_id}")
 def update_offered_service(
-    id: CurrentId, service_service: ServiceSvc, offered_svc_update_req: OfferedServiceCreate, offered_svc_id=Path(...)
-):  # TODO: Temp schema
+    id: CurrentId, service_service: ServiceSvc, offered_svc_update_req: OfferedServiceUpdate, offered_svc_id=Path(...)
+):
     pass
 
 

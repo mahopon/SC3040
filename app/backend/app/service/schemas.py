@@ -32,3 +32,8 @@ class OfferedServiceCreate(BaseModel):
     service_id: int
     rate: int
     day: List[Day]
+
+
+class OfferedServiceUpdate(BaseModel):
+    rate: int
+    day: List[Day]
