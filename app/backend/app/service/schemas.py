@@ -14,14 +14,25 @@ class Service(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class ServiceDetails(BaseModel):
+    name: str
+
+
+class CareTakerDetails(BaseModel):
+    first_name: str
+
+
 class OfferedService(BaseModel):
     """
     Pydantic schema representing an offered service by a caretaker.
     """
 
     id: int
-    name: str
+    service: ServiceDetails
+    petcaretaker: CareTakerDetails
     rate: int
+
+    model_config = {"from_attributes": True}
 
 
 class OfferedServiceCreate(BaseModel):

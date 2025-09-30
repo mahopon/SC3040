@@ -1,6 +1,11 @@
 from typing import Protocol, List
 from uuid import UUID
-from .schemas import OfferedServiceCreate, OfferedService as OfferedServiceDTO, Service as ServiceDTO
+from .schemas import (
+    OfferedServiceCreate,
+    OfferedService as OfferedServiceDTO,
+    Service as ServiceDTO,
+    OfferedServiceUpdate,
+)
 
 
 class ExternalServiceService(Protocol):
@@ -17,4 +22,9 @@ class InternalServiceService(ExternalServiceService, Protocol):
     """
 
     def get_offered_services_by_profile_id(self, *, profile_id: UUID) -> List[OfferedServiceDTO]: ...
+    def get_offered_services(self) -> List[OfferedServiceDTO]: ...
+    def update_offered_service(
+        self, *, caretaker_id: UUID, offered_service_id: int, offered_service_update: OfferedServiceUpdate
+    ) -> None: ...
+    def delete_offered_service(self, *, caretaker_id: UUID, offered_service_id: int) -> None: ...
     def get_services(self) -> List[ServiceDTO]: ...

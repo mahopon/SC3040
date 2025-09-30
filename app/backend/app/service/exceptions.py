@@ -1,0 +1,2 @@
+class CareTakerOfferedServiceExists(Exception):
+    pass

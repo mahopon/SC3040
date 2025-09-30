@@ -4,6 +4,7 @@ from .models import Service, OfferedService, ServiceBooking, ServiceBookingDay
 from app.util.repository import db_add
 from typing import List
 from uuid import UUID
+from typing import Optional
 
 
 class ServiceRepository:
@@ -22,9 +23,21 @@ class ServiceRepository:
     def create_service_booking_day(self, *, booking_day_new: ServiceBookingDay) -> None:
         db_add(self.db_session, booking_day_new)
 
+    def get_offered_service_by_id(self, offered_service_id: int) -> Optional[OfferedService]:
+        stmt = select(OfferedService).where(OfferedService.id == offered_service_id)
+        return self.db_session.execute(stmt).scalar_one_or_none()
+
     def get_services(self) -> List[Service]:
         stmt = select(Service)
         return list(self.db_session.execute(stmt).scalars().all())
+
+    def get_offered_service_by_service_caretaker_id(
+        self, *, service_id: int, caretaker_id: UUID
+    ) -> Optional[OfferedService]:
+        stmt = select(OfferedService).where(
+            OfferedService.service_id == service_id and OfferedService.caretaker_id == caretaker_id
+        )
+        return self.db_session.execute(stmt).scalar_one_or_none()
 
     def get_offered_services_by_profile_id(self, *, profile_id: UUID) -> List[OfferedService]:
         stmt = (
@@ -32,4 +45,8 @@ class ServiceRepository:
             .join(Service, OfferedService.service_id == Service.id)
             .where(OfferedService.caretaker_id == profile_id)
         )
+        return list(self.db_session.execute(stmt).scalars().all())
+
+    def get_offered_services(self) -> List[OfferedService]:
+        stmt = select(OfferedService).join(Service, OfferedService.service_id == Service.id)
         return list(self.db_session.execute(stmt).scalars().all())
