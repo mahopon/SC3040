@@ -18,7 +18,7 @@ from app.pet.repository import PetRepository
 from app.service.models import Service, OfferedService
 from app.service.repository import ServiceRepository
 from app.location.models import Location
-from app.location.repository import create_location
+from app.location.repository import LocationRepository
 from datetime import datetime
 from uuid import uuid4
 
@@ -34,6 +34,7 @@ owner_repo = PetOwnerRepository(db_session=session)
 caretaker_repo = PetCareTakerRepository(db_session=session)
 pet_repo = PetRepository(db_session=session)
 service_repo = ServiceRepository(db_session=session)
+location_repo = LocationRepository(db_session=session)
 # UUID generation
 uuids = [uuid4() for i in range(2)]
 # Auth + Profile + Pet Owner / Pet Care Taker
@@ -156,7 +157,7 @@ locs = []
 for loc in locations:
     location = Location(name=loc)
     locs.append(location)
-    create_location(db_session=session, location_new=location)
+    location_repo.create_location(location_new=location)
 for i in range(1, 4):
     offered_svc = OfferedService(service_id=i, caretaker_id=uuids[1], rate=50, day=["Monday", "Tuesday", "Wednesday"])
     for o in range(1, 4):
