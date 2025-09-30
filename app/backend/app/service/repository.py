@@ -27,5 +27,9 @@ class ServiceRepository:
         return list(self.db_session.execute(stmt).scalars().all())
 
     def get_offered_services_by_profile_id(self, *, profile_id: UUID) -> List[OfferedService]:
-        stmt = select(OfferedService).where(OfferedService.caretaker_id == profile_id)
+        stmt = (
+            select(OfferedService)
+            .join(Service, OfferedService.service_id == Service.id)
+            .where(OfferedService.caretaker_id == profile_id)
+        )
         return list(self.db_session.execute(stmt).scalars().all())

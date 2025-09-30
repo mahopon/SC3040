@@ -11,12 +11,16 @@ class Service(BaseModel):
     id: int
     name: str
 
+    model_config = {"from_attributes": True}
 
-class OfferedService(Service):
+
+class OfferedService(BaseModel):
     """
     Pydantic schema representing an offered service by a caretaker.
     """
 
+    id: int
+    name: str
     rate: int
 
 

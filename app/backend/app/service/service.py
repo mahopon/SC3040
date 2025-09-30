@@ -29,7 +29,11 @@ class ServiceService:
         Retrieve all offered services for a specific caretaker.
         """
         all_services = self.repo.get_offered_services_by_profile_id(profile_id=profile_id)
-        return [OfferedServiceDTO.model_validate(svc) for svc in all_services]
+        dto_services = []
+        for svc in all_services:
+            dto = OfferedServiceDTO(id=svc.id, name=svc.service.name, rate=svc.rate)
+            dto_services.append(dto)
+        return dto_services
 
     def get_services(self) -> List[ServiceDTO]:
         """

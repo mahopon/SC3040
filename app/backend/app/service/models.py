@@ -43,7 +43,7 @@ class OfferedService(Base):
     rate: Mapped[int] = mapped_column(nullable=False)
     day: Mapped[list[DayEnum]] = mapped_column(ARRAY(Enum(DayEnum)), nullable=False)
 
-    service: Mapped["Service"] = relationship(back_populates="offered_services")
+    service: Mapped["Service"] = relationship(back_populates="offered_services", lazy="joined")
     service_bookings: Mapped[list["ServiceBooking"]] = relationship(back_populates="offered_service")
     petcaretaker: Mapped["PetCareTaker"] = relationship(back_populates="offered_services")  # noqa
     locations: Mapped[list["Location"]] = relationship(  # noqa
