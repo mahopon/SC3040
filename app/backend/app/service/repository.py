@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, update, delete
-from .models import Service, OfferedService, ServiceBooking, ServiceBookingDay
+from .models import Service, OfferedService
 from app.util.repository import db_add
 from typing import List, Dict, Any
 from uuid import UUID
@@ -16,12 +16,6 @@ class ServiceRepository:
 
     def create_offered_service(self, *, offered_service_new: OfferedService) -> None:
         db_add(self.db_session, offered_service_new)
-
-    def create_service_booking(self, *, service_booking_new: ServiceBooking) -> None:
-        db_add(self.db_session, service_booking_new)
-
-    def create_service_booking_day(self, *, booking_day_new: ServiceBookingDay) -> None:
-        db_add(self.db_session, booking_day_new)
 
     def get_offered_service_by_id(self, offered_service_id: int) -> Optional[OfferedService]:
         stmt = select(OfferedService).where(OfferedService.id == offered_service_id)

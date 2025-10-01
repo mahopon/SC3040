@@ -44,56 +44,13 @@ class OfferedService(Base):
     day: Mapped[list[DayEnum]] = mapped_column(ARRAY(Enum(DayEnum)), nullable=False)
 
     service: Mapped["Service"] = relationship(back_populates="offered_services", lazy="joined")
-    service_bookings: Mapped[list["ServiceBooking"]] = relationship(back_populates="offered_service")
+    service_bookings: Mapped[list["ServiceBooking"]] = relationship(back_populates="offered_service")  # noqa
     petcaretaker: Mapped["PetCareTaker"] = relationship(back_populates="offered_services")  # noqa
     locations: Mapped[list["Location"]] = relationship(  # noqa
         secondary="offered_service_location", back_populates="offered_services"
     )
 
     __table_args__ = (UniqueConstraint("service_id", "caretaker_id", name="uix_service_caretaker"),)
-
-
-class ServiceBooking(Base):
-    """
-    Represents a booking of an OfferedService for a Pet.
-
-    Attributes:
-        id (int): Primary key.
-        offered_service_id (int): FK to OfferedService.id.
-        pet_id (int): FK to Pet.id.
-        pet (Pet): Relationship to the booked pet.
-        offered_service (OfferedService): Relationship to the offered service.
-        service_booking_days (list[ServiceBookingDay]): Days of booking.
-        review (Review): Review associated with this booking.
-        billing (Billing): Billing information for this booking.
-    """
-
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    offered_service_id: Mapped[int] = mapped_column(
-        ForeignKey("offered_service.id", ondelete="CASCADE"), nullable=False
-    )
-    pet_id: Mapped[int] = mapped_column(ForeignKey("pet.id", ondelete="CASCADE"), nullable=False)
-
-    pet: Mapped["Pet"] = relationship(back_populates="service_bookings")  # noqa
-    offered_service: Mapped["OfferedService"] = relationship(back_populates="service_bookings")
-    service_booking_days: Mapped[list["ServiceBookingDay"]] = relationship(back_populates="service_booking")
-    review: Mapped["Review"] = relationship(back_populates="service_booking")  # noqa
-    billing: Mapped["Billing"] = relationship(back_populates="service_booking")  # noqa
-
-
-class ServiceBookingDay(Base):
-    """
-    Represents a specific day of a ServiceBooking.
-
-    Attributes:
-        id (int): Foreign key to ServiceBooking.id, primary key.
-        day (DayEnum): The day of the booking.
-        service_booking (ServiceBooking): Relationship to the booking.
-    """
-
-    id: Mapped[int] = mapped_column(ForeignKey("service_booking.id"), primary_key=True)
-    day: Mapped[DayEnum] = mapped_column(primary_key=True)
-    service_booking: Mapped["ServiceBooking"] = relationship(back_populates="service_booking_days")
 
 
 # Association table for many-to-many between OfferedService and Location
