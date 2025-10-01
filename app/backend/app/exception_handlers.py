@@ -5,19 +5,14 @@ from app.auth.exception_handlers import (
 )
 from app.auth.exceptions import InvalidCredentials, EmailAlreadyExists, PasswordMismatch
 from app.profile.exception_handlers import (
-    profile_exists_exception_handler,
-    profile_not_exists_exception_handler,
     profile_onboarded_exception_handler,
 )
-from app.profile.exceptions import ProfileAlreadyExists, ProfileAlreadyOnboarded, ProfileNotExists
-from app.petcaretaker.exception_handlers import petcaretaker_not_found_exception_handler
-from app.petcaretaker.exceptions import PetCareTakerNotFound
+from app.profile.exceptions import ProfileAlreadyOnboarded
 from app.service.exception_handlers import (
     caretaker_offered_svc_exists_exception_handler,
-    offered_svc_not_exists_exception_handler,
 )
-from app.service.exceptions import OfferedServiceNotExists, CareTakerOfferedServiceExists
-from app.exceptions import InsufficientPermissions
+from app.service.exceptions import CareTakerOfferedServiceExists
+from app.exceptions import InsufficientPermissions, ResourceNotExists, ResourceAlreadyExists
 from fastapi import FastAPI, status
 from fastapi.requests import Request
 from fastapi.responses import JSONResponse
@@ -37,20 +32,32 @@ async def insufficient_permissions_exception_handler(request: Request, exc: Insu
     )
 
 
+async def resource_not_exists_exception_handler(request: Request, exc: ResourceNotExists) -> JSONResponse:
+    return JSONResponse(
+        status_code=status.HTTP_404_NOT_FOUND,
+        content={"message": str(exc)},
+    )
+
+
+async def resource_exists_exception_handler(request: Request, exc: ResourceAlreadyExists) -> JSONResponse:
+    return JSONResponse(
+        status_code=status.HTTP_409_CONFLICT,
+        content={"message": str(exc)},
+    )
+
+
 def register_exception_handlers(app: FastAPI) -> None:
     # Global
     app.add_exception_handler(RequestValidationError, validation_exception_handler)  # type: ignore[arg-type]
     app.add_exception_handler(InsufficientPermissions, insufficient_permissions_exception_handler)  # type: ignore[arg-type]
+    app.add_exception_handler(ResourceNotExists, resource_not_exists_exception_handler)  # type: ignore[arg-type]
+    app.add_exception_handler(ResourceAlreadyExists, resource_exists_exception_handler)  # type: ignore[arg-type]
     # Auth
     app.add_exception_handler(InvalidCredentials, invalid_credentials_exception_handler)  # type: ignore[arg-type]
     app.add_exception_handler(EmailAlreadyExists, email_exists_exception_handler)  # type: ignore[arg-type]
     app.add_exception_handler(PasswordMismatch, password_mismatch_exception_handler)  # type: ignore[arg-type]
     # Profile
-    app.add_exception_handler(ProfileNotExists, profile_not_exists_exception_handler)  # type: ignore[arg-type]
     app.add_exception_handler(ProfileAlreadyOnboarded, profile_onboarded_exception_handler)  # type: ignore[arg-type]
-    app.add_exception_handler(ProfileAlreadyExists, profile_exists_exception_handler)  # type: ignore[arg-type]
     # PetCareTaker
-    app.add_exception_handler(PetCareTakerNotFound, petcaretaker_not_found_exception_handler)  # type: ignore[arg-type]
     # Service
-    app.add_exception_handler(OfferedServiceNotExists, offered_svc_not_exists_exception_handler)  # type: ignore[arg-type]
     app.add_exception_handler(CareTakerOfferedServiceExists, caretaker_offered_svc_exists_exception_handler)  # type: ignore[arg-type]

@@ -1,6 +1,9 @@
-class CareTakerOfferedServiceExists(Exception):
+from app.exceptions import ResourceNotExists, ResourceAlreadyExists
+
+
+class CareTakerOfferedServiceExists(ResourceAlreadyExists):
     pass
 
 
-class OfferedServiceNotExists(Exception):
+class OfferedServiceNotExists(ResourceNotExists):
     pass

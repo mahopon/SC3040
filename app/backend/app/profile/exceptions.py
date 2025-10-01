@@ -1,4 +1,7 @@
-class ProfileAlreadyExists(Exception):
+from app.exceptions import ResourceAlreadyExists, ResourceNotExists
+
+
+class ProfileAlreadyExists(ResourceAlreadyExists):
     """
     Raised when attempting to create a profile that already exists.
     """
@@ -6,7 +9,7 @@ class ProfileAlreadyExists(Exception):
     pass
 
 
-class ProfileNotExists(Exception):
+class ProfileNotExists(ResourceNotExists):
     """
     Raised when a profile is requested but does not exist.
     """
