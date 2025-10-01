@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import delete
+from sqlalchemy import delete, select
 from .models import PetOwner
 from app.util.repository import db_add
 from uuid import UUID
+from typing import Optional
 
 
 class PetOwnerRepository:
@@ -15,3 +16,7 @@ class PetOwnerRepository:
     def delete_petowner(self, *, petowner_id: UUID) -> None:
         stmt = delete(PetOwner).where(PetOwner.id == petowner_id)
         self.db_session.execute(stmt)
+
+    def get_petowner_by_id(self, *, petowner_id: UUID) -> Optional[PetOwner]:
+        stmt = select(PetOwner).where(PetOwner.id == petowner_id)
+        return self.db_session.execute(stmt).scalar_one_or_none()

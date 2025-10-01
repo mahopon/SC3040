@@ -2,6 +2,7 @@ from .protocols import InternalPetOwnerService
 from .repository import PetOwnerRepository
 from .schemas import PetOwnerCreate
 from .models import PetOwner
+from .exceptions import PetOwnerExists, PetOwnerNotExists
 from uuid import UUID
 
 
@@ -31,9 +32,11 @@ class PetOwnerService(InternalPetOwnerService):
         Returns:
             PetOwner: The created PetOwner instance.
         """
-        petowner = PetOwner(**petowner_new.model_dump())
-        self.repo.create_petowner(petowner_new=petowner)
-        return petowner
+        petowner = self.repo.get_petowner_by_id(petowner_id=petowner_new.id)
+        if petowner:
+            raise PetOwnerExists("Pet owner profile already exist")
+        new_petowner = PetOwner(**petowner_new.model_dump())
+        self.repo.create_petowner(petowner_new=new_petowner)
 
     def delete_pet_owner(self, *, petowner_id: UUID) -> None:
         """
@@ -42,4 +45,7 @@ class PetOwnerService(InternalPetOwnerService):
         Args:
             petowner_id (UUID): The ID of the PetOwner to delete.
         """
+        petowner = self.repo.get_petowner_by_id(petowner_id=petowner_id)
+        if not petowner:
+            raise PetOwnerNotExists("Pet owner profile doesn't exist")
         self.repo.delete_petowner(petowner_id=petowner_id)
