@@ -12,6 +12,12 @@ from app.profile.exception_handlers import (
 from app.profile.exceptions import ProfileAlreadyExists, ProfileAlreadyOnboarded, ProfileNotExists
 from app.petcaretaker.exception_handlers import petcaretaker_not_found_exception_handler
 from app.petcaretaker.exceptions import PetCareTakerNotFound
+from app.service.exception_handlers import (
+    caretaker_offered_svc_exists_exception_handler,
+    offered_svc_not_exists_exception_handler,
+)
+from app.service.exceptions import OfferedServiceNotExists, CareTakerOfferedServiceExists
+from app.exceptions import InsufficientPermissions
 from fastapi import FastAPI, status
 from fastapi.requests import Request
 from fastapi.responses import JSONResponse
@@ -24,9 +30,17 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     return JSONResponse(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, content={"message": msg})
 
 
+async def insufficient_permissions_exception_handler(request: Request, exc: InsufficientPermissions) -> JSONResponse:
+    return JSONResponse(
+        status_code=status.HTTP_403_FORBIDDEN,
+        content={"message": str(exc)},
+    )
+
+
 def register_exception_handlers(app: FastAPI) -> None:
     # Global
     app.add_exception_handler(RequestValidationError, validation_exception_handler)  # type: ignore[arg-type]
+    app.add_exception_handler(InsufficientPermissions, insufficient_permissions_exception_handler)  # type: ignore[arg-type]
     # Auth
     app.add_exception_handler(InvalidCredentials, invalid_credentials_exception_handler)  # type: ignore[arg-type]
     app.add_exception_handler(EmailAlreadyExists, email_exists_exception_handler)  # type: ignore[arg-type]
@@ -37,3 +51,6 @@ def register_exception_handlers(app: FastAPI) -> None:
     app.add_exception_handler(ProfileAlreadyExists, profile_exists_exception_handler)  # type: ignore[arg-type]
     # PetCareTaker
     app.add_exception_handler(PetCareTakerNotFound, petcaretaker_not_found_exception_handler)  # type: ignore[arg-type]
+    # Service
+    app.add_exception_handler(OfferedServiceNotExists, offered_svc_not_exists_exception_handler)  # type: ignore[arg-type]
+    app.add_exception_handler(CareTakerOfferedServiceExists, caretaker_offered_svc_exists_exception_handler)  # type: ignore[arg-type]
