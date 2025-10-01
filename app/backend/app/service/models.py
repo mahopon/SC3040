@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey, Enum, Table, Column
+from sqlalchemy import ForeignKey, Enum, Table, Column, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import ARRAY
 from app.database.core import Base
@@ -49,6 +49,8 @@ class OfferedService(Base):
     locations: Mapped[list["Location"]] = relationship(  # noqa
         secondary="offered_service_location", back_populates="offered_services"
     )
+
+    __table_args__ = (UniqueConstraint("service_id", "caretaker_id", name="uix_service_caretaker"),)
 
 
 class ServiceBooking(Base):

@@ -38,11 +38,18 @@ def create_offered_service(
 
 @offered_service_router.put("/{offered_svc_id}")
 def update_offered_service(
-    id: CurrentId, service_service: ServiceSvc, offered_svc_update_req: OfferedServiceUpdate, offered_svc_id=Path(...)
-):
-    pass
+    id: CurrentId,
+    service_service: ServiceSvc,
+    offered_svc_update_req: OfferedServiceUpdate,
+    offered_svc_id: int = Path(...),
+) -> Response:
+    service_service.update_offered_service(
+        caretaker_id=id, offered_service_id=offered_svc_id, offered_service_update=offered_svc_update_req
+    )
+    return Response(status_code=status.HTTP_200_OK)
 
 
 @offered_service_router.delete("/{offered_svc_id}")
-def delete_offered_service(id: CurrentId, service_service: ServiceSvc, offered_svc_id=Path(...)):
-    pass
+def delete_offered_service(id: CurrentId, service_service: ServiceSvc, offered_svc_id: int = Path(...)) -> Response:
+    service_service.delete_offered_service(caretaker_id=id, offered_service_id=offered_svc_id)
+    return Response(status_code=status.HTTP_200_OK)

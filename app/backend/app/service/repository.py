@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import select
+from sqlalchemy import select, update, delete
 from .models import Service, OfferedService, ServiceBooking, ServiceBookingDay
 from app.util.repository import db_add
-from typing import List
+from typing import List, Dict, Any
 from uuid import UUID
 from typing import Optional
 
@@ -50,3 +50,11 @@ class ServiceRepository:
     def get_offered_services(self) -> List[OfferedService]:
         stmt = select(OfferedService).join(Service, OfferedService.service_id == Service.id)
         return list(self.db_session.execute(stmt).scalars().all())
+
+    def update_offered_service(self, offered_service_id: int, values: Dict[str, Any]) -> None:
+        stmt = update(OfferedService).where(OfferedService.id == offered_service_id).values(**values)
+        self.db_session.execute(stmt)
+
+    def delete_offered_service(self, offered_service_id: int) -> None:
+        stmt = delete(OfferedService).where(OfferedService.id == offered_service_id)
+        self.db_session.execute(stmt)
