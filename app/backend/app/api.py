@@ -4,6 +4,7 @@ from app.profile.views import profile_router
 from app.onboarding.views import onboarding_router
 from app.service.views import service_router, offered_service_router
 from app.location.views import location_router
+from app.booking.views import booking_router
 
 router = APIRouter()
 
@@ -14,3 +15,4 @@ router.include_router(onboarding_router, prefix="/onboarding", tags=["Onboarding
 router.include_router(service_router, prefix="/service", tags=["Service"])
 router.include_router(offered_service_router, prefix="/offered-service", tags=["Offered Service"])
 router.include_router(location_router, prefix="/location", tags=["Location"])
+router.include_router(booking_router, prefix="/booking", tags=["Booking"])
