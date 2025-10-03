@@ -20,5 +20,5 @@ class PetCareTaker(Base):
     yoe: Mapped[int] = mapped_column(nullable=False, comment="Years of experience")
 
     # Relationships
-    profile: Mapped["Profile"] = relationship(back_populates="petcaretaker")  # noqa
+    profile: Mapped["Profile"] = relationship(back_populates="petcaretaker", lazy="joined")  # noqa
     offered_services: Mapped[list["OfferedService"]] = relationship(back_populates="petcaretaker")  # noqa

@@ -5,6 +5,7 @@ from .schemas import (
     OfferedService as OfferedServiceDTO,
     Service as ServiceDTO,
     OfferedServiceUpdate,
+    OfferedServiceSearch,
 )
 
 
@@ -27,4 +28,5 @@ class InternalServiceService(ExternalServiceService, Protocol):
         self, *, caretaker_id: UUID, offered_service_id: int, offered_service_update: OfferedServiceUpdate
     ) -> None: ...
     def delete_offered_service(self, *, caretaker_id: UUID, offered_service_id: int) -> None: ...
+    def search_offered_service(self, *, search_parameters: OfferedServiceSearch) -> List[OfferedServiceDTO]: ...
     def get_services(self) -> List[ServiceDTO]: ...

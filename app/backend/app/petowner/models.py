@@ -17,5 +17,5 @@ class PetOwner(Base):
     id: Mapped[UUID] = mapped_column(ForeignKey("profile.id", ondelete="CASCADE"), primary_key=True)
 
     # Relationships
-    profile: Mapped["Profile"] = relationship(back_populates="petowner")  # noqa
+    profile: Mapped["Profile"] = relationship(back_populates="petowner", lazy="joined")  # noqa
     pets: Mapped[list["Pet"]] = relationship(back_populates="owner")  # noqa

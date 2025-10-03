@@ -1,6 +1,8 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from sqlalchemy import select, update, delete
 from .models import Service, OfferedService
+from .enums import Day
+from app.location.models import Location
 from app.util.repository import db_add
 from typing import List, Dict, Any
 from uuid import UUID
@@ -52,3 +54,39 @@ class ServiceRepository:
     def delete_offered_service(self, offered_service_id: int) -> None:
         stmt = delete(OfferedService).where(OfferedService.id == offered_service_id)
         self.db_session.execute(stmt)
+
+    def search_offered_service(
+        self,
+        *,
+        services: Optional[List[int]] = None,
+        locations: Optional[List[int]] = None,
+        availability: Optional[List[Day]] = None,
+        max_rate: Optional[int] = None,
+        limit: int = 10,
+        skip: int = 0,
+    ):
+        stmt = select(OfferedService).options(
+            selectinload(OfferedService.locations),
+            selectinload(OfferedService.service_bookings),
+        )
+        # Filter by service IDs
+        if services:
+            stmt = stmt.where(OfferedService.service_id.in_(services))
+
+        # Filter by maximum rate
+        if max_rate is not None:
+            stmt = stmt.where(OfferedService.rate <= max_rate)
+
+        # Filter by availability (day array column)
+        if availability:
+            # days = [day.value for day in availability]
+            stmt = stmt.where(OfferedService.day.contains(availability))
+
+        # Filter by locations (many-to-many relationship)
+        if locations:
+            stmt = stmt.join(OfferedService.locations).where(Location.id.in_(locations))
+
+        stmt = stmt.limit(limit).offset(skip)
+
+        result = self.db_session.execute(stmt)
+        return result.scalars().all()

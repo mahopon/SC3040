@@ -1,8 +1,8 @@
-from fastapi import APIRouter, status, Path
+from fastapi import APIRouter, status, Path, Depends
 from fastapi.responses import JSONResponse, Response
 from fastapi.encoders import jsonable_encoder
 from .dependency import InternalServiceSvc as ServiceSvc
-from .schemas import OfferedServiceCreate, OfferedServiceUpdate
+from .schemas import OfferedServiceCreate, OfferedServiceUpdate, OfferedServiceSearch
 from uuid import UUID
 from app.auth.dependency import CurrentId
 
@@ -22,7 +22,7 @@ def get_offered_services(service_service: ServiceSvc) -> JSONResponse:
     return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(all_offered_services))
 
 
-@offered_service_router.get("/{user_id}")
+@offered_service_router.get("/user/{user_id}")
 def get_offered_services_by_id(service_service: ServiceSvc, user_id: UUID = Path(...)) -> JSONResponse:
     offered_services = service_service.get_offered_services_by_profile_id(profile_id=user_id)
     return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(offered_services))
@@ -53,3 +53,9 @@ def update_offered_service(
 def delete_offered_service(id: CurrentId, service_service: ServiceSvc, offered_svc_id: int = Path(...)) -> Response:
     service_service.delete_offered_service(caretaker_id=id, offered_service_id=offered_svc_id)
     return Response(status_code=status.HTTP_200_OK)
+
+
+@offered_service_router.get("/search")
+def search_offered_service(service_service: ServiceSvc, params: OfferedServiceSearch = Depends()) -> JSONResponse:
+    searched_offered_services = service_service.search_offered_service(search_parameters=params)
+    return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(searched_offered_services))

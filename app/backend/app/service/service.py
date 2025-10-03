@@ -6,6 +6,7 @@ from .schemas import (
     OfferedService as OfferedServiceDTO,
     Service as ServiceDTO,
     OfferedServiceUpdate,
+    OfferedServiceSearch,
 )
 from .models import OfferedService
 from .exceptions import CareTakerOfferedServiceExists, OfferedServiceNotExists
@@ -90,3 +91,26 @@ class ServiceService(InternalServiceService):
         """
         all_services = self.repo.get_services()
         return [ServiceDTO.model_validate(svc) for svc in all_services]
+
+    def search_offered_service(self, *, search_parameters: OfferedServiceSearch) -> List[OfferedServiceDTO]:
+        """
+        Retrieves all offered services based on search search parameters
+
+        Args:
+            search_parameters (OfferedServiceSearch): DTO containing possible search parameters
+
+        Returns:
+            List[OfferedServiceDTO]: List of all offered services by search parameters
+        """
+        searched_offered_services = self.repo.search_offered_service(
+            services=search_parameters.service_id,
+            locations=search_parameters.location_id,
+            availability=search_parameters.availability,
+            max_rate=search_parameters.max_rate,
+            limit=search_parameters.limit,
+            skip=search_parameters.skip,
+        )
+        dto_offered_services = [
+            OfferedServiceDTO.model_validate(offered_svc) for offered_svc in searched_offered_services
+        ]
+        return dto_offered_services
