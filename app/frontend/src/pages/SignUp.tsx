@@ -1,10 +1,10 @@
-
 import { EyeOff, Eye } from "lucide-react"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate, Link } from "react-router-dom"
 import Loading from "@/components/Loading"
 import { AuthAPI } from "@/api"
+import AppLogo from "@/components/AppLogo"
 
 type TSignUpForm = {
   firstName: string
@@ -34,7 +34,7 @@ export default function SignUp() {
   const onSubmit = async (data: TSignUpForm) => {
     try {
       const { agree, firstName, ...restData } = data
-      
+
       // Transform frontend data to match backend expectations
       const signupData = {
         name: firstName, // Map firstName to name
@@ -44,7 +44,7 @@ export default function SignUp() {
         dob: "1990-01-01T00:00:00Z", // Placeholder DOB - will be updated later
         gender: "male" as const, // Placeholder gender - will be updated later
       }
-      
+
       await AuthAPI.signup(signupData)
       // On successful signup, navigate to login page for now
       // Later this can redirect to DOB/gender collection page
@@ -59,12 +59,7 @@ export default function SignUp() {
       <div className="auth-bg fixed inset-0 z-[-1] bg-gradient-to-br from-indigo-400 from-5% via-teal-300 via-25% to-orange-300 to-80%"></div>
       <div className="min-h-screen flex flex-col px-12">
         <header className="flex justify-between items-center pt-9">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-xl">PM</span>
-            </div>
-            <span className="text-gray-800 font-medium text-xl">PawfectMatch</span>
-          </div>
+          <AppLogo />
           <Link
             to="/login"
             className="px-6 py-2 border-2 border-black text-black font-bold text-sm hover:bg-black hover:text-white transition-colors"
@@ -93,18 +88,18 @@ export default function SignUp() {
                   type="text"
                   aria-invalid={!!errors.firstName}
                   className={`w-full px-3 py-3 border rounded-md focus:outline-none focus:border-black ${
-                    errors.firstName ? 'border-red-500 focus:border-red-500' : 'border-gray-300'
+                    errors.firstName ? "border-red-500 focus:border-red-500" : "border-gray-300"
                   }`}
                   {...register("firstName", {
                     required: "First name is required",
                     minLength: {
                       value: 2,
-                      message: "First name must be at least 2 characters"
+                      message: "First name must be at least 2 characters",
                     },
                     pattern: {
                       value: /^[a-zA-Z\s]+$/,
-                      message: "First name should only contain letters and spaces"
-                    }
+                      message: "First name should only contain letters and spaces",
+                    },
                   })}
                 />
                 {errors.firstName && (
@@ -123,15 +118,15 @@ export default function SignUp() {
                   type="email"
                   aria-invalid={!!errors.email}
                   className={`w-full px-3 py-3 border rounded-md focus:outline-none focus:border-black ${
-                    errors.email ? 'border-red-500 focus:border-red-500' : 'border-gray-300'
+                    errors.email ? "border-red-500 focus:border-red-500" : "border-gray-300"
                   }`}
                   placeholder="yourname@gmail.com"
                   {...register("email", {
                     required: "Email is required",
                     pattern: {
                       value: /^[^\s@]+@gmail\.com$/,
-                      message: "Please use a Gmail address (@gmail.com)"
-                    }
+                      message: "Please use a Gmail address (@gmail.com)",
+                    },
                   })}
                 />
                 {errors.email && (
@@ -146,7 +141,8 @@ export default function SignUp() {
                   Password
                 </label>
                 <p className="text-xs text-gray-500 mb-2">
-                  Must contain: 8+ characters, uppercase, lowercase, number, and special character (@$!%*?&)
+                  Must contain: 8+ characters, uppercase, lowercase, number, and special character
+                  (@$!%*?&)
                 </p>
                 <div className="relative">
                   <input
@@ -156,22 +152,22 @@ export default function SignUp() {
                     className={`w-full px-3 py-3 border rounded-md focus:outline-none focus:border-black ${
                       errors.password ? "border-red-500 focus:border-red-500" : "border-gray-300"
                     }`}
-                    {...register("password", { 
+                    {...register("password", {
                       required: "Password is required",
                       minLength: {
                         value: 8,
-                        message: "Password must be at least 8 characters"
+                        message: "Password must be at least 8 characters",
                       },
                       validate: {
                         hasLowercase: (value) =>
                           /[a-z]/.test(value) || "Password must contain a lowercase letter",
                         hasUppercase: (value) =>
-                          /[A-Z]/.test(value) || "Password must contain an uppercase letter", 
-                        hasNumber: (value) =>
-                          /\d/.test(value) || "Password must contain a digit",
+                          /[A-Z]/.test(value) || "Password must contain an uppercase letter",
+                        hasNumber: (value) => /\d/.test(value) || "Password must contain a digit",
                         hasSpecialChar: (value) =>
-                          /[@$!%*?&]/.test(value) || "Password must contain a special character (@$!%*?&)"
-                      }
+                          /[@$!%*?&]/.test(value) ||
+                          "Password must contain a special character (@$!%*?&)",
+                      },
                     })}
                   />
                   <button
@@ -192,14 +188,16 @@ export default function SignUp() {
                   <input
                     type="checkbox"
                     className="w-4 h-4 border-gray-300 rounded"
-                    {...register("agree", { required: "You must agree to the Terms of Service and Privacy Policy" })}
+                    {...register("agree", {
+                      required: "You must agree to the Terms of Service and Privacy Policy",
+                    })}
                   />
-                  <span className="ml-2 text-sm text-gray-600">I agree to the Terms of Service and Privacy Policy.</span>
+                  <span className="ml-2 text-sm text-gray-600">
+                    I agree to the Terms of Service and Privacy Policy.
+                  </span>
                 </label>
               </div>
-              {errors.agree && (
-                <p className="mt-1 text-sm text-red-600">{errors.agree.message}</p>
-              )}
+              {errors.agree && <p className="mt-1 text-sm text-red-600">{errors.agree.message}</p>}
               <button
                 type="submit"
                 disabled={isSubmitting}

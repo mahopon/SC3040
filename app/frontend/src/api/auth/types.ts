@@ -1,11 +1,13 @@
+export type AuthenticatedResponse = {
+  authenticated: boolean
+}
+
 export type LoginProps = {
   email: string
   password: string
 }
 
-export type LoginResponse = {
-  name: string
-}
+export type LoginResponse = {}
 
 export type SignUpProps = {
   name: string
@@ -18,3 +20,5 @@ export type SignUpProps = {
 export type SignUpResponse = {
   // Backend returns 201 status with no body for register endpoint
 }
+
+export type LogoutResponse = {}

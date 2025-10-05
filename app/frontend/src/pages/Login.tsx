@@ -1,9 +1,10 @@
 import { EyeOff, Eye } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import Loading from "@/components/Loading"
-import { AuthAPI } from "@/api"
+import { AuthAPI, OnboardingAPI } from "@/api"
+import AppLogo from "@/components/AppLogo"
 
 type TLoginForm = {
   email: string
@@ -12,8 +13,6 @@ type TLoginForm = {
 }
 
 const Login = () => {
-  // TBD: Check if already logged in
-
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
 
@@ -32,21 +31,27 @@ const Login = () => {
 
   const onSubmit = async ({ email, password }: TLoginForm) => {
     await AuthAPI.login({ email, password })
-      .then(() => navigate("/", { replace: true }))
+      .then(
+        async () =>
+          await OnboardingAPI.fetchOnboardingStatus()
+            .then(({ onboarded }) => navigate(onboarded ? "/" : "/onboarding", { replace: true }))
+            .catch((err) => alert(err.message)),
+      )
       .catch((err) => alert(err.message))
   }
+
+  useEffect(() => {
+    AuthAPI.isAuthenticated().then(({ authenticated }) => {
+      if (authenticated) navigate("/onboarding", { replace: true })
+    })
+  }, [])
 
   return (
     <>
       <div className="auth-bg fixed inset-0 z-[-1] bg-gradient-to-br from-indigo-400 from-5% via-teal-300 via-25% to-orange-300 to-80%"></div>
       <div className="min-h-screen flex flex-col px-12">
         <header className="flex justify-between items-center pt-9">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-xl">PM</span>
-            </div>
-            <span className="text-gray-800 font-medium text-xl">PawfectMatch</span>
-          </div>
+          <AppLogo />
           <button className="px-6 py-2 border-2 border-black text-black font-bold text-sm hover:bg-black hover:text-white transition-colors hover:cursor-pointer">
             SIGN UP
           </button>

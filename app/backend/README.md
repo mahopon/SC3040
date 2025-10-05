@@ -83,7 +83,5 @@ This is the backend of the SC3040 project.
 1. Run development server
 
    ```bash
-   python -m app.main
-   # OR
    uvicorn app.main:app --host 0.0.0.0 --port 8000
    ```

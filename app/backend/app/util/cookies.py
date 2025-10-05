@@ -7,6 +7,6 @@ def set_cookie(*, response: Response, key: str, value: str, max_age: int) -> Non
         value=value,
         httponly=True,
         secure=False,
-        samesite="none",  # needed for localhost cross port
+        samesite="lax",  # needed for localhost cross port
         max_age=max_age,  # 31 days
     )
