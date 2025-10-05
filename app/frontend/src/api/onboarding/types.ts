@@ -13,8 +13,6 @@ export type ProfileOnboardRequest = {
   yearsOfExperience?: number
 }
 
-export type ProfileOnboardResponse = {}
-
 export type PetOnboardRequest = {
   name: string
   species: string
@@ -24,14 +22,8 @@ export type PetOnboardRequest = {
   preferences: string
 }
 
-export type PetOnboardResponse = {}
-
 export type ServiceOnboardRequest = {
   serviceId: number
   rate: number
   day: number[]
 }[]
-
-export type ServiceOnboardResponse = {}
-
-export type CompleteOnboardResponse = {}

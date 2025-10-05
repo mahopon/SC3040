@@ -7,8 +7,6 @@ export type LoginProps = {
   password: string
 }
 
-export type LoginResponse = {}
-
 export type SignUpProps = {
   name: string
   email: string
@@ -19,6 +17,5 @@ export type SignUpProps = {
 
 export type SignUpResponse = {
   // Backend returns 201 status with no body for register endpoint
+  detail?: string
 }
-
-export type LogoutResponse = {}

@@ -33,7 +33,7 @@ export default function SignUp() {
 
   const onSubmit = async (data: TSignUpForm) => {
     try {
-      const { agree, firstName, ...restData } = data
+      const { firstName, ...restData } = data
 
       // Transform frontend data to match backend expectations
       const signupData = {
@@ -49,8 +49,8 @@ export default function SignUp() {
       // On successful signup, navigate to login page for now
       // Later this can redirect to DOB/gender collection page
       navigate("/login", { replace: true })
-    } catch (err: any) {
-      alert(err.message)
+    } catch (err) {
+      alert(err)
     }
   }
 

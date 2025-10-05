@@ -21,8 +21,8 @@ export type TOnboardingForm = {
     species: string
     breed: string
     age: number
-    healthCondition: string
-    preferences: string
+    healthCondition?: string
+    preferences?: string
   }
   petService?: {
     serviceId: number
@@ -89,7 +89,8 @@ const Onboarding = () => {
         if (userRole === "owner") {
           await OnboardingAPI.onboardPet({
             ...petProfile!,
-            health: petProfile?.healthCondition!,
+            health: petProfile?.healthCondition ?? "",
+            preferences: petProfile?.preferences ?? "",
           }).then(
             async () =>
               await OnboardingAPI.onboardComplete().then(() => navigate("/", { replace: true })),

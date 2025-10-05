@@ -1,14 +1,10 @@
 import { http } from "../client"
 import { API } from "../endpoints"
 import type {
-  CompleteOnboardResponse,
   OnboardingStatus,
   PetOnboardRequest,
-  PetOnboardResponse,
   ProfileOnboardRequest,
-  ProfileOnboardResponse,
   ServiceOnboardRequest,
-  ServiceOnboardResponse,
 } from "./types"
 
 export const fetchOnboardingStatus = async (): Promise<OnboardingStatus> => {
@@ -22,9 +18,9 @@ export const fetchOnboardingStatus = async (): Promise<OnboardingStatus> => {
   }
 }
 
-export const onboardProfile = (data: ProfileOnboardRequest): Promise<ProfileOnboardResponse> => {
+export const onboardProfile = async (data: ProfileOnboardRequest): Promise<void> => {
   try {
-    const res = http.post<ProfileOnboardResponse>(API.ONBOARDING.PROFILE, {
+    const res = await http.post<void>(API.ONBOARDING.PROFILE, {
       first_name: data.firstName,
       last_name: data.lastName,
       dob: data.dateOfBirth,
@@ -35,27 +31,27 @@ export const onboardProfile = (data: ProfileOnboardRequest): Promise<ProfileOnbo
       yoe: data.yearsOfExperience ?? 0,
     })
     console.log("POST profile onboard: ", res)
-    return res
+    return res.data
   } catch (err) {
     console.log(`POST profile onboard: ${err}`)
     throw new Error("Failed to onboard profile")
   }
 }
 
-export const onboardPet = (data: PetOnboardRequest): Promise<PetOnboardResponse> => {
+export const onboardPet = async (data: PetOnboardRequest): Promise<void> => {
   try {
-    const res = http.post<PetOnboardResponse>(API.ONBOARDING.PET, data)
+    const res = await http.post<void>(API.ONBOARDING.PET, data)
     console.log("POST pet onboard: ", res)
-    return res
+    return res.data
   } catch (err) {
     console.log(`POST pet onboard: ${err}`)
     throw new Error("Failed to onboard pet")
   }
 }
 
-export const onboardService = (data: ServiceOnboardRequest): Promise<ServiceOnboardResponse> => {
+export const onboardService = async (data: ServiceOnboardRequest): Promise<void> => {
   try {
-    const res = http.post<ServiceOnboardResponse>(
+    const res = await http.post<void>(
       API.ONBOARDING.SERVICE,
       data.map(({ serviceId, rate, day }) => ({
         service_id: serviceId,
@@ -64,18 +60,18 @@ export const onboardService = (data: ServiceOnboardRequest): Promise<ServiceOnbo
       })),
     )
     console.log("POST service onboard: ", res)
-    return res
+    return res.data
   } catch (err) {
     console.log(`POST service onboard: ${err}`)
     throw new Error("Failed to onboard service")
   }
 }
 
-export const onboardComplete = (): Promise<CompleteOnboardResponse> => {
+export const onboardComplete = async (): Promise<void> => {
   try {
-    const res = http.post<CompleteOnboardResponse>(API.ONBOARDING.COMPLETE)
+    const res = await http.post<void>(API.ONBOARDING.COMPLETE)
     console.log("POST complete onboard: ", res)
-    return res
+    return res.data
   } catch (err) {
     console.log("POST complete onboard: ", err)
     throw new Error("Failed to complete onboarding")
