@@ -6,4 +6,9 @@ export type ProfileResponse = {
   address: string
   gender: string
   type: string
+  profile_picture?: string
+}
+
+export type ProfilePictureResponse = {
+  profilePicture: string
 }

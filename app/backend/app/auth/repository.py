@@ -28,5 +28,5 @@ class AuthRepository:
         db_add(self.db_session, session_new)
 
     def delete_session(self, session_id: str) -> None:
-        stmt = delete(AuthSession).where(AuthSession.auth_id == session_id)
+        stmt = delete(AuthSession).where(AuthSession.session_id == session_id)
         self.db_session.execute(stmt)

@@ -1,7 +1,7 @@
 import { EyeOff, Eye } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Loading from "@/components/Loading"
 import { AuthAPI, OnboardingAPI } from "@/api"
 import AppLogo from "@/components/AppLogo"
@@ -52,9 +52,12 @@ const Login = () => {
       <div className="min-h-screen flex flex-col px-12">
         <header className="flex justify-between items-center pt-9">
           <AppLogo />
-          <button className="px-6 py-2 border-2 border-black text-black font-bold text-sm hover:bg-black hover:text-white transition-colors hover:cursor-pointer">
+          <Link
+            to="/signup"
+            className="px-6 py-2 border-2 border-black text-black font-bold text-sm hover:bg-black hover:text-white transition-colors hover:cursor-pointer"
+          >
             SIGN UP
-          </button>
+          </Link>
         </header>
 
         <div className="flex-1 flex items-center justify-center">

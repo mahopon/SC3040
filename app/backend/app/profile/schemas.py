@@ -29,6 +29,7 @@ class Profile(BaseModel):
     address: Optional[str] = None
     type: Optional[str] = None
     yoe: Optional[int] = None
+    profile_picture: Optional[str] = None
 
     class Config:
         from_attributes = True
