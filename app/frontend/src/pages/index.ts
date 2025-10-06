@@ -3,6 +3,7 @@ import Bookings from "./Bookings"
 import Dashboard from "./Dashboard"
 import Home from "./Home"
 import Login from "./Login"
+import NewBooking from "./NewBooking"
 import Onboarding from "./Onboarding"
 import Profile from "./Profile"
 import ServiceBrowsing from "./ServiceBrowsing"
@@ -15,6 +16,7 @@ export {
   Dashboard,
   Home,
   Login,
+  NewBooking,
   Onboarding,
   Profile,
   ServiceBrowsing,

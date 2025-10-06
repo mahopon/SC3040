@@ -4,6 +4,7 @@ import {
   Dashboard,
   Home,
   Login,
+  NewBooking,
   Onboarding,
   Profile,
   ServiceBrowsing,
@@ -23,4 +24,5 @@ export const router = createBrowserRouter([
   { path: "/service/:id", element: <ServiceDetail /> },
   { path: "/booking/:id", element: <Booking /> },
   { path: "/bookings", element: <Bookings /> },
+  { path: "/booking/new", element: <NewBooking /> },
 ])

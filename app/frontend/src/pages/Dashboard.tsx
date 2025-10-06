@@ -21,6 +21,7 @@ import {
   Info,
   X,
 } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 type BookingStatus = BookingSummary["status"]
 
@@ -60,11 +61,14 @@ const Card: FC<CardProps> = ({ title, subtitle, description, action, children, i
   </section>
 )
 
-const HoverButton: FC<{ readonly label: string; readonly icon?: ReactNode }> = ({
-  label,
-  icon,
-}) => (
-  <button type="button" className="ctaButton">
+interface HoverButtonProps {
+  readonly label: string
+  readonly icon?: ReactNode
+  readonly onClick?: () => void
+}
+
+const HoverButton: FC<HoverButtonProps> = ({ label, icon, onClick }) => (
+  <button type="button" className="ctaButton" onClick={onClick}>
     <span>{label}</span>
     {icon}
   </button>
@@ -140,6 +144,7 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     let isActive = true
@@ -232,6 +237,10 @@ const Dashboard = () => {
     [handleCloseModal],
   )
 
+  const handleStartBooking = useCallback(() => {
+    navigate("/booking/new")
+  }, [navigate])
+
   return (
     <main className="dashboard">
       <header className="dashboardHeader">
@@ -282,6 +291,7 @@ const Dashboard = () => {
             <HoverButton
               label="Get started"
               icon={<ChevronRight aria-hidden="true" strokeWidth={1.8} />}
+              onClick={handleStartBooking}
             />
           }
           icon={<CalendarPlus strokeWidth={1.8} aria-hidden="true" />}
