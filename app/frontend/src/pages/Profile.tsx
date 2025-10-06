@@ -2,6 +2,8 @@ import { ProfileAPI } from "@/api"
 import type { ProfileResponse } from "@/api/profile/types"
 import Navbar from "@/components/Navbar"
 import About from "@/components/profile/About"
+import ContentLayout from "@/components/profile/ContentLayout"
+import PetCard from "@/components/profile/PetCard"
 import ServiceCard from "@/components/profile/ServiceCard"
 import { User } from "lucide-react"
 import { useEffect, useState } from "react"
@@ -46,45 +48,89 @@ const Profile = () => {
               dateOfBirth={user.dob}
             />
 
-            <div className="mt-5 space-y-5">
-              <div className="flex items-center justify-between">
-                <h2 className="font-bold">Service(s) Provided</h2>
-                <button className="bg-black text-white py-2 px-4 rounded-md  transition-colors font-medium disabled:opacity-60 enabled:hover:bg-gray-800 enabled:hover:cursor-pointer">
-                  + Add Service
-                </button>
-              </div>
+            {user.type === "caretaker" && (
+              <ContentLayout
+                title="Service(s) Provided"
+                action={{
+                  label: "+ Add Service",
+                  onClick: () => console.log("Add service"),
+                }}
+                children={
+                  <>
+                    <ServiceCard
+                      service={{
+                        id: 1,
+                        serviceId: 1,
+                        name: "Dog Grooming",
+                        description:
+                          "Full grooming service including bath, haircut, nail trimming, and ear cleaning for all dog breeds.",
+                        rate: 80,
+                        duration: 120,
+                        days: [1, 2, 3, 4, 5],
+                      }}
+                      onEdit={(id: number) => console.log("Editing service: ", id)}
+                      onDelete={(id: number) => console.log("Deleting service: ", id)}
+                    />
+                    <ServiceCard
+                      service={{
+                        id: 1,
+                        serviceId: 1,
+                        name: "Cat Grooming",
+                        description:
+                          "Gentle grooming for cats including bath, brushing, and nail trimming with specialized care.",
+                        rate: 50,
+                        duration: 60,
+                        days: [1, 2, 3, 4, 5],
+                      }}
+                      onEdit={(id: number) => console.log("Editing service: ", id)}
+                      onDelete={(id: number) => console.log("Deleting service: ", id)}
+                    />
+                  </>
+                }
+              />
+            )}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <ServiceCard
-                  service={{
-                    id: 1,
-                    serviceId: 1,
-                    name: "Dog Grooming",
-                    description:
-                      "Full grooming service including bath, haircut, nail trimming, and ear cleaning for all dog breeds.",
-                    rate: 80,
-                    duration: 120,
-                    days: [1, 2, 3, 4, 5],
-                  }}
-                  onEdit={(id: number) => console.log("Editing service: ", id)}
-                  onDelete={(id: number) => console.log("Deleting service: ", id)}
-                />
-                <ServiceCard
-                  service={{
-                    id: 1,
-                    serviceId: 1,
-                    name: "Cat Grooming",
-                    description:
-                      "Gentle grooming for cats including bath, brushing, and nail trimming with specialized care.",
-                    rate: 50,
-                    duration: 60,
-                    days: [1, 2, 3, 4, 5],
-                  }}
-                  onEdit={(id: number) => console.log("Editing service: ", id)}
-                  onDelete={(id: number) => console.log("Deleting service: ", id)}
-                />
-              </div>
-            </div>
+            {user.type === "owner" && (
+              <ContentLayout
+                title="Pet(s) Owned"
+                action={{
+                  label: "+ Add Pet",
+                  onClick: () => console.log("Add pet"),
+                }}
+                children={
+                  <>
+                    <PetCard
+                      pet={{
+                        id: 0,
+                        name: "Happy",
+                        species: "Dog",
+                        breed: "Labrador Retriever",
+                        age: 2,
+                        health: "Healthy",
+                        preferences:
+                          "Prefers beef over anything else, does not like medicine, does not like needles, very scared of the vet",
+                      }}
+                      onEdit={(id: number) => console.log("Editing pet: ", id)}
+                      onDelete={(id: number) => console.log("Deleting pet: ", id)}
+                    />
+                    <PetCard
+                      pet={{
+                        id: 0,
+                        name: "Milk",
+                        species: "Cat",
+                        breed: "Persian",
+                        age: 5,
+                        health: "Healthy",
+                        preferences:
+                          "Very friendly, does not mind being touches, bla bla bla bla bla",
+                      }}
+                      onEdit={(id: number) => console.log("Editing pet: ", id)}
+                      onDelete={(id: number) => console.log("Deleting pet: ", id)}
+                    />
+                  </>
+                }
+              />
+            )}
           </div>
         </div>
       )}

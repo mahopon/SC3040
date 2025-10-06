@@ -5,7 +5,7 @@ export type ProfileResponse = {
   dob: string
   address: string
   gender: string
-  type: string
+  type: "caretaker" | "owner"
   profile_picture?: string
 }
 

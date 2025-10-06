@@ -14,7 +14,9 @@ type TPetServiceProps = {
 
 const defaultService = {
   serviceId: 0,
+  description: "",
   rate: 0,
+  duration: 0,
   day: [],
 }
 
@@ -84,7 +86,7 @@ const PetService = ({ onContinue, onBack }: TPetServiceProps) => {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="col-span-1">
+                    <div className="col-span-1 md:col-span-2">
                       <Label htmlFor={`petService.${index}.serviceId`} text="Service Type" />
                       <select
                         id={`petService.${index}.serviceId`}
@@ -109,12 +111,26 @@ const PetService = ({ onContinue, onBack }: TPetServiceProps) => {
                       <ErrorText error={errors.petService?.[index]?.serviceId} />
                     </div>
 
+                    <div className="col-span-1 md:col-span-2">
+                      <Label htmlFor={`petService.${index}.description`} text="Description" />
+                      <textarea
+                        id={`petService.${index}.description`}
+                        className={inputBase}
+                        aria-invalid={!!errors.petService?.[index]?.description}
+                        {...register(`petService.${index}.serviceId` as const, {
+                          required: "Description is required",
+                        })}
+                        defaultValue={field.description || 0}
+                      />
+                      <ErrorText error={errors.petService?.[index]?.description} />
+                    </div>
+
                     <div className="col-span-1">
                       <Label htmlFor={`petService.${index}.rate`} text="Hourly/Daily Rate ($)" />
                       <input
                         id={`petService.${index}.rate`}
                         type="number"
-                        placeholder="e.g., 25.00"
+                        placeholder="e.g. 25.00"
                         className={inputBase}
                         aria-invalid={!!errors.petService?.[index]?.rate}
                         {...register(`petService.${index}.rate` as const, {
@@ -124,6 +140,23 @@ const PetService = ({ onContinue, onBack }: TPetServiceProps) => {
                         })}
                       />
                       <ErrorText error={errors.petService?.[index]?.rate} />
+                    </div>
+
+                    <div className="col-span-1">
+                      <Label htmlFor={`petService.${index}.duration`} text="Duration (min)" />
+                      <input
+                        id={`petService.${index}.duration`}
+                        type="number"
+                        placeholder="0"
+                        className={inputBase}
+                        aria-invalid={!!errors.petService?.[index]?.duration}
+                        {...register(`petService.${index}.duration` as const, {
+                          required: "Duration is required",
+                          valueAsNumber: true,
+                          min: { value: 1, message: "Duration must be positive" },
+                        })}
+                      />
+                      <ErrorText error={errors.petService?.[index]?.duration} />
                     </div>
                   </div>
 
