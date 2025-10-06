@@ -1,8 +1,20 @@
-import { Booking, Bookings, Home, Login, Onboarding, Profile, ServiceBrowsing, ServiceDetail, SignUp } from "@/pages"
+import {
+  Booking,
+  Bookings,
+  Dashboard,
+  Home,
+  Login,
+  Onboarding,
+  Profile,
+  ServiceBrowsing,
+  ServiceDetail,
+  SignUp,
+} from "@/pages"
 import { createBrowserRouter } from "react-router-dom"
 
 export const router = createBrowserRouter([
   { path: "/", element: <Home /> },
+  { path: "/dashboard", element: <Dashboard /> },
   { path: "/login", element: <Login /> },
   { path: "/signup", element: <SignUp /> },
   { path: "/onboarding", element: <Onboarding /> },
