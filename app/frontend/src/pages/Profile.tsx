@@ -5,8 +5,8 @@ import About from "@/components/profile/About"
 import ContentLayout from "@/components/profile/ContentLayout"
 import PetCard from "@/components/profile/PetCard"
 import ServiceCard from "@/components/profile/ServiceCard"
-import { User } from "lucide-react"
 import { useEffect, useState } from "react"
+import { userPlaceholderUrl } from "@/assets"
 
 const Profile = () => {
   const [user, setUser] = useState<ProfileResponse>()
@@ -22,15 +22,11 @@ const Profile = () => {
       <div className="relative h-50 bg-gradient-to-r from-purple-400 via-green-300 to-yellow-300">
         <div className="absolute -bottom-10 left-[5%] lg:left-[20%] md:left-[12.5%] flex items-center gap-5">
           <div className="h-36 w-36 ">
-            {user?.profile_picture ? (
-              <img
-                src={user.profile_picture || "/placeholder.svg"}
-                alt="Profile"
-                className="h-full w-full object-cover rounded-full"
-              />
-            ) : (
-              <User className="h-full w-full" />
-            )}
+            <img
+              src={user?.profile_picture || userPlaceholderUrl}
+              alt="Profile"
+              className="h-full w-full object-cover rounded-full"
+            />
           </div>
           <div className="text-4xl font-bold">{user?.first_name}</div>
         </div>

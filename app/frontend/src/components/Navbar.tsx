@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom"
 import AppLogo from "./AppLogo"
 import { useEffect, useState } from "react"
 import { AuthAPI, ProfileAPI } from "@/api"
-import { User } from "lucide-react"
+import { userPlaceholderUrl } from "@/assets"
 
 const Navbar = () => {
   const navigate = useNavigate()
@@ -32,15 +32,11 @@ const Navbar = () => {
 
         <div className="relative group">
           <button className="h-10 w-10 hover:cursor-pointer" aria-label="User profile">
-            {profilePicture ? (
-              <img
-                src={profilePicture || "/placeholder.svg"}
-                alt="Profile"
-                className="h-full w-full object-cover rounded-full"
-              />
-            ) : (
-              <User className="h-full w-full" />
-            )}
+            <img
+              src={profilePicture || userPlaceholderUrl}
+              alt="Profile"
+              className="h-full w-full object-cover rounded-full"
+            />
           </button>
 
           <div className="absolute right-0 z-10 hidden bg-grey-200 group-hover:block bg-white shadow-2xl min-w-[150px] rounded-md border border-gray-100">
