@@ -48,7 +48,7 @@ async def resource_exists_exception_handler(request: Request, exc: ResourceAlrea
 
 def register_exception_handlers(app: FastAPI) -> None:
     # Global
-    app.add_exception_handler(RequestValidationError, validation_exception_handler)  # type: ignore[arg-type]
+    # app.add_exception_handler(RequestValidationError, validation_exception_handler)  # type: ignore[arg-type]
     app.add_exception_handler(InsufficientPermissions, insufficient_permissions_exception_handler)  # type: ignore[arg-type]
     app.add_exception_handler(ResourceNotExists, resource_not_exists_exception_handler)  # type: ignore[arg-type]
     app.add_exception_handler(ResourceAlreadyExists, resource_exists_exception_handler)  # type: ignore[arg-type]

@@ -7,7 +7,8 @@ from app.service.models import (
     Service,  # noqa
     OfferedService,  # noqa
 )
-from app.booking.models import ServiceBooking, ServiceBookingDay  # noqa
+from app.booking.models import ServiceBooking  # noqa
 from app.review.models import Review  # noqa
-from app.billing.models import Billing, Payment  # noqa
+from app.billing.models import Billing  # noqa
+from app.payment.models import Payment  # noqa
 from app.location.models import Location  # noqa
