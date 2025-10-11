@@ -33,12 +33,17 @@ class ServiceService(InternalServiceService):
         Args:
             profile_id (UUID): Profile ID of the caretaker
             offered_service_req (OfferedServiceCreate): New offered service details
+
+        Raises:
+            CareTakerOfferedServiceExists: If the caretaker already has an existing listing for this service
         """
         offered_svc = self.repo.get_offered_service_by_service_caretaker_id(
             service_id=offered_service_req.service_id, caretaker_id=profile_id
         )
         if offered_svc:
-            raise CareTakerOfferedServiceExists("User cannot creare more than one listing for a service")
+            raise CareTakerOfferedServiceExists(
+                f"User cannot creare more than one listing for a service. NAME: {offered_svc.service.name}"
+            )
         new_offered_service = OfferedService(caretaker_id=profile_id, **offered_service_req.model_dump())
         self.repo.create_offered_service(offered_service_new=new_offered_service)
 
@@ -58,6 +63,19 @@ class ServiceService(InternalServiceService):
     def update_offered_service(
         self, *, caretaker_id: UUID, offered_service_id: int, offered_service_update: OfferedServiceUpdate
     ) -> None:
+        """
+        Updates an offered service owned by the given caretaker.
+
+        Args:
+            caretaker_id (UUID): Caretaker profile identifier.
+            offered_service_id (int): Offered service identifier.
+            offered_service_update (OfferedServiceUpdate): Updated service details.
+
+        Raises:
+            OfferedServiceNotExists: If the offered service does not exist.
+            InsufficientPermissions: If the caretaker does not own the service.
+        """
+
         offered_svc = self.repo.get_offered_service_by_id(offered_service_id=offered_service_id)
         if not offered_svc:
             raise OfferedServiceNotExists("Offered service ID doesn't exist")
@@ -68,6 +86,17 @@ class ServiceService(InternalServiceService):
         )
 
     def delete_offered_service(self, *, caretaker_id: UUID, offered_service_id: int) -> None:
+        """
+        Deletes an offered service owned by the given caretaker.
+
+        Args:
+            caretaker_id (UUID): Caretaker profile identifier.
+            offered_service_id (int): Offered service identifier.
+
+        Raises:
+            OfferedServiceNotExists: If the offered service does not exist.
+            InsufficientPermissions: If the caretaker does not own the service.
+        """
         offered_svc = self.repo.get_offered_service_by_id(offered_service_id=offered_service_id)
         if not offered_svc:
             raise OfferedServiceNotExists("Offered service ID doesn't exist")

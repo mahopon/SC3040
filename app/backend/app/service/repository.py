@@ -64,7 +64,7 @@ class ServiceRepository:
         max_rate: Optional[int] = None,
         limit: int = 10,
         skip: int = 0,
-    ):
+    ) -> List[OfferedService]:
         stmt = select(OfferedService).options(
             selectinload(OfferedService.locations),
             selectinload(OfferedService.service_bookings),
@@ -89,4 +89,4 @@ class ServiceRepository:
         stmt = stmt.limit(limit).offset(skip)
 
         result = self.db_session.execute(stmt)
-        return result.scalars().all()
+        return list(result.scalars().all())

@@ -10,25 +10,25 @@ service_router = APIRouter()
 offered_service_router = APIRouter()
 
 
-@service_router.get("/")
+@service_router.get("")
 def get_services(service_service: ServiceSvc) -> JSONResponse:
     all_services = service_service.get_services()
     return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(all_services))
 
 
-@offered_service_router.get("/")
+@offered_service_router.get("")
 def get_offered_services(service_service: ServiceSvc) -> JSONResponse:
     all_offered_services = service_service.get_offered_services()
     return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(all_offered_services))
 
 
-@offered_service_router.get("/user/{user_id}")
+@offered_service_router.get("/{user_id}")
 def get_offered_services_by_id(service_service: ServiceSvc, user_id: UUID = Path(...)) -> JSONResponse:
     offered_services = service_service.get_offered_services_by_profile_id(profile_id=user_id)
     return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(offered_services))
 
 
-@offered_service_router.post("/create")
+@offered_service_router.post("")
 def create_offered_service(
     id: CurrentId, service_service: ServiceSvc, new_offered_svc_req: OfferedServiceCreate
 ) -> Response:
@@ -36,7 +36,7 @@ def create_offered_service(
     return Response(status_code=status.HTTP_201_CREATED)
 
 
-@offered_service_router.put("/{offered_svc_id}")
+@offered_service_router.patch("/{offered_svc_id}")
 def update_offered_service(
     id: CurrentId,
     service_service: ServiceSvc,
