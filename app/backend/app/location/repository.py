@@ -16,3 +16,8 @@ class LocationRepository:
         stmt = select(Location)
         result = self.db_session.execute(stmt).scalars().all()
         return list(result)
+
+    def get_filtered_locations(self, location_ids: List[int]) -> List[Location]:
+        stmt = select(Location).where(Location.id.in_(location_ids))
+        locations = self.db_session.execute(stmt).scalars().all()
+        return list(locations)
