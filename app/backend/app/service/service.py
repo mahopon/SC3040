@@ -12,6 +12,7 @@ from .models import OfferedService
 from .exceptions import CareTakerOfferedServiceExists, OfferedServiceNotExists
 from app.exceptions import InsufficientPermissions
 from typing import List
+from app.location.protocols import ExternalLocationService as LocationService
 
 
 class ServiceService(InternalServiceService):
@@ -19,12 +20,13 @@ class ServiceService(InternalServiceService):
     Concrete implementation of Service-related operations.
     """
 
-    def __init__(self, repo: ServiceRepository):
+    def __init__(self, repo: ServiceRepository, location_service: LocationService):
         """
         Args:
             repo: Repository handling database interactions for services.
         """
         self.repo = repo
+        self.location_service = location_service
 
     def create_offered_service(self, *, profile_id: UUID, offered_service_req: OfferedServiceCreate) -> None:
         """
@@ -44,7 +46,10 @@ class ServiceService(InternalServiceService):
             raise CareTakerOfferedServiceExists(
                 f"User cannot creare more than one listing for a service. NAME: {offered_svc.service.name}"
             )
-        new_offered_service = OfferedService(caretaker_id=profile_id, **offered_service_req.model_dump())
+        locations = self.location_service.get_filtered_locations(location_ids=offered_service_req.locations)
+        new_offered_service = OfferedService(
+            caretaker_id=profile_id, locations=locations, **offered_service_req.model_dump(exclude={"locations"})
+        )
         self.repo.create_offered_service(offered_service_new=new_offered_service)
 
     def get_offered_services_by_profile_id(self, *, profile_id: UUID) -> List[OfferedServiceDTO]:
