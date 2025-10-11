@@ -137,8 +137,8 @@ def test_onboard_already_boarded(onboard_svc):
 def test_onboard_offered_services_success(onboard_svc):
     id = uuid4()
     offered_svcs = [
-        OfferedServiceCreate(service_id=1, rate=50, day=[1, 2]),
-        OfferedServiceCreate(service_id=2, rate=50, day=[1, 2]),
+        OfferedServiceCreate(service_id=1, rate=50, day=[1, 2], locations=[1, 2]),
+        OfferedServiceCreate(service_id=2, rate=50, day=[1, 2], locations=[1, 2]),
     ]
     onboard_svc.profile_service.check_onboarding_status.return_value = False
 
@@ -155,8 +155,8 @@ def test_onboard_offered_services_success(onboard_svc):
 def test_onboard_offered_services_already_onboarded(onboard_svc):
     id = uuid4()
     offered_svcs = [
-        OfferedServiceCreate(service_id=1, rate=50, day=[1, 2]),
-        OfferedServiceCreate(service_id=2, rate=50, day=[1, 2]),
+        OfferedServiceCreate(service_id=1, rate=50, day=[1, 2], locations=[1, 2]),
+        OfferedServiceCreate(service_id=2, rate=50, day=[1, 2], locations=[1, 2]),
     ]
     onboard_svc.profile_service.check_onboarding_status.return_value = True
 

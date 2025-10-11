@@ -5,6 +5,9 @@ from app.service.service import ServiceService
 from app.service.models import OfferedService, Service
 from app.service.schemas import OfferedService as OfferedServiceDTO, OfferedServiceCreate, Service as ServiceDTO
 from app.service.enums import Day
+from app.location.models import Location
+from app.petcaretaker.models import PetCareTaker
+from app.profile.models import Profile
 
 
 @pytest.fixture
@@ -13,13 +16,24 @@ def repo_mock():
 
 
 @pytest.fixture
-def service(repo_mock):
-    return ServiceService(repo=repo_mock)
+def location_service():
+    return MagicMock()
+
+
+@pytest.fixture
+def service(repo_mock, location_service):
+    return ServiceService(repo=repo_mock, location_service=location_service)
 
 
 def test_create_offered_service(service, repo_mock):
     profile_id = uuid4()
-    offered_service_req = OfferedServiceCreate(service_id=1, rate=50, day=[1, 2, 3])
+    offered_service_req = OfferedServiceCreate(service_id=1, rate=50, day=[1, 2, 3], locations=[1, 2])
+    service.repo.get_offered_service_by_service_caretaker_id.return_value = None
+    service.location_service.get_filtered_locations.return_value = [
+        Location(id=1, name="Test"),
+        Location(id=2, name="Test"),
+    ]
+
     service.create_offered_service(profile_id=profile_id, offered_service_req=offered_service_req)
 
     created_obj = repo_mock.create_offered_service.call_args[1]["offered_service_new"]
@@ -33,8 +47,26 @@ def test_create_offered_service(service, repo_mock):
 def test_get_offered_services_by_profile_id(service, repo_mock):
     profile_id = uuid4()
     fake_services = [
-        OfferedService(id=1, caretaker_id=profile_id, service_id=1, rate=5, service=Service(id=1, name="Walking")),
-        OfferedService(id=2, caretaker_id=profile_id, service_id=2, rate=10, service=Service(id=2, name="Grooming")),
+        OfferedService(
+            id=1,
+            caretaker_id=profile_id,
+            service_id=1,
+            rate=5,
+            day=[1, 2],
+            service=Service(id=1, name="Walking"),
+            locations=[Location(id=1, name="testLocation")],
+            petcaretaker=PetCareTaker(id=profile_id, yoe=5, profile=Profile(first_name="Test", last_name="Test")),
+        ),
+        OfferedService(
+            id=2,
+            caretaker_id=profile_id,
+            service_id=2,
+            rate=10,
+            day=[1, 2],
+            service=Service(id=2, name="Grooming"),
+            locations=[Location(id=1, name="testLocation")],
+            petcaretaker=PetCareTaker(id=profile_id, yoe=5, profile=Profile(first_name="Test", last_name="Test")),
+        ),
     ]
     repo_mock.get_offered_services_by_profile_id.return_value = fake_services
 

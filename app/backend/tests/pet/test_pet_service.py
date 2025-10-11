@@ -11,8 +11,13 @@ def mock_repo():
 
 
 @pytest.fixture
-def pet_service(mock_repo):
-    return PetService(repo=mock_repo)
+def petowner_service():
+    return MagicMock()
+
+
+@pytest.fixture
+def pet_service(mock_repo, petowner_service):
+    return PetService(repo=mock_repo, petowner_service=petowner_service)
 
 
 def test_create_pet(pet_service, mock_repo):

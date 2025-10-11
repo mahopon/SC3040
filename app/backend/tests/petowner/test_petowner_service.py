@@ -18,6 +18,7 @@ def petowner_service(mock_repo):
 def test_create_petowner(petowner_service, mock_repo):
     id = uuid4()
     petowner_new = PetOwnerCreate(id=id)
+    petowner_service.repo.get_petowner_by_id.return_value = None
 
     petowner_service.create_pet_owner(petowner_new=petowner_new)
 
