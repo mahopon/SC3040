@@ -1,5 +1,5 @@
-from typing import Protocol
-from .schemas import PetCreate
+from typing import Protocol, List
+from .schemas import PetCreate, Pet as PetDTO
 from uuid import UUID
 
 
@@ -10,14 +10,8 @@ class ExternalPetService(Protocol):
     Intended for use by modules or routes that interact with pet functionality.
     """
 
-    def create_pet(self, *, owner_id: UUID, pet_new: PetCreate) -> None:
-        """
-        Create a new pet for the given owner.
-
-        Args:
-            owner_id (UUID): The ID of the pet owner.
-            pet_new (PetCreate): Schema containing the pet's data.
-        """
+    def create_pet(self, *, owner_id: UUID, pet_new: PetCreate) -> None: ...
+    def get_pet(self, *, owner_id: UUID, pet_id: int) -> PetDTO: ...
 
 
 class InternalPetService(ExternalPetService, Protocol):
@@ -27,4 +21,5 @@ class InternalPetService(ExternalPetService, Protocol):
     Currently mirrors ExternalPetService, but can be extended with internal-only methods in the future.
     """
 
-    pass
+    def delete_pet(self, *, owner_id: UUID, pet_id: int) -> None: ...
+    def get_pets_by_owner_id(self, *, owner_id: UUID) -> List[PetDTO]: ...
