@@ -2,7 +2,13 @@ from pydantic import BaseModel
 from uuid import UUID
 
 
-class PetOwnerCreate(BaseModel):
+class PetOwner(BaseModel):
+    id: UUID
+
+    model_config = {"from_attributes": True}
+
+
+class PetOwnerCreate(PetOwner):
     """
     Schema for creating a new PetOwner.
 

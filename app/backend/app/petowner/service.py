@@ -1,6 +1,6 @@
 from .protocols import InternalPetOwnerService
 from .repository import PetOwnerRepository
-from .schemas import PetOwnerCreate
+from .schemas import PetOwnerCreate, PetOwner as PetOwnerDTO
 from .models import PetOwner
 from .exceptions import PetOwnerExists, PetOwnerNotExists
 from uuid import UUID
@@ -22,7 +22,7 @@ class PetOwnerService(InternalPetOwnerService):
         """
         self.repo = repo
 
-    def create_pet_owner(self, *, petowner_new: PetOwnerCreate) -> PetOwner:
+    def create_pet_owner(self, *, petowner_new: PetOwnerCreate) -> None:
         """
         Create a new PetOwner and persist it to the database.
 
@@ -45,7 +45,11 @@ class PetOwnerService(InternalPetOwnerService):
         Args:
             petowner_id (UUID): The ID of the PetOwner to delete.
         """
+        self.repo.delete_petowner(petowner_id=petowner_id)
+
+    def get_pet_owner(self, *, petowner_id: UUID) -> PetOwnerDTO:
         petowner = self.repo.get_petowner_by_id(petowner_id=petowner_id)
         if not petowner:
             raise PetOwnerNotExists("Pet owner profile doesn't exist")
-        self.repo.delete_petowner(petowner_id=petowner_id)
+        petownerDTO = PetOwnerDTO.model_validate(petowner)
+        return petownerDTO

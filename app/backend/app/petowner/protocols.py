@@ -1,6 +1,5 @@
 from typing import Protocol
-from .schemas import PetOwnerCreate
-from .models import PetOwner
+from .schemas import PetOwnerCreate, PetOwner as PetOwnerDTO
 from uuid import UUID
 
 
@@ -11,7 +10,7 @@ class ExternalPetOwnerService(Protocol):
     Intended for use by API routes or other modules interacting with PetOwner functionality.
     """
 
-    def create_pet_owner(self, *, petowner_new: PetOwnerCreate) -> PetOwner:
+    def create_pet_owner(self, *, petowner_new: PetOwnerCreate) -> None:
         """
         Create a new PetOwner.
 
@@ -29,6 +28,8 @@ class ExternalPetOwnerService(Protocol):
         Args:
             petowner_id (UUID): The ID of the PetOwner to delete.
         """
+
+    def get_pet_owner(self, *, petowner_id: UUID) -> PetOwnerDTO: ...
 
 
 class InternalPetOwnerService(ExternalPetOwnerService, Protocol):
