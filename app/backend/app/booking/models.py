@@ -1,13 +1,13 @@
 from app.database.core import Base
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.service.enums import Day as DayEnum
+from .enums import Status
+from datetime import datetime
 
 
 class ServiceBooking(Base):
     """
     Represents a booking of an OfferedService for a Pet.
-
     Attributes:
         id (int): Primary key.
         offered_service_id (int): FK to OfferedService.id.
@@ -24,24 +24,12 @@ class ServiceBooking(Base):
         ForeignKey("offered_service.id", ondelete="CASCADE"), nullable=False
     )
     pet_id: Mapped[int] = mapped_column(ForeignKey("pet.id", ondelete="CASCADE"), nullable=False)
+    date: Mapped[datetime] = mapped_column(nullable=False)
+    status: Mapped[Status] = mapped_column(default=Status.Pending, nullable=False)
 
     pet: Mapped["Pet"] = relationship(back_populates="service_bookings")  # noqa
     offered_service: Mapped["OfferedService"] = relationship(back_populates="service_bookings")  # noqa
-    service_booking_days: Mapped[list["ServiceBookingDay"]] = relationship(back_populates="service_booking")
     review: Mapped["Review"] = relationship(back_populates="service_booking")  # noqa
     billing: Mapped["Billing"] = relationship(back_populates="service_booking")  # noqa
 
-
-class ServiceBookingDay(Base):
-    """
-    Represents a specific day of a ServiceBooking.
-
-    Attributes:
-        id (int): Foreign key to ServiceBooking.id, primary key.
-        day (DayEnum): The day of the booking.
-        service_booking (ServiceBooking): Relationship to the booking.
-    """
-
-    id: Mapped[int] = mapped_column(ForeignKey("service_booking.id"), primary_key=True)
-    day: Mapped[DayEnum] = mapped_column(primary_key=True)
-    service_booking: Mapped["ServiceBooking"] = relationship(back_populates="service_booking_days")
+    __table_args__ = (UniqueConstraint("pet_id", "date", "offered_service_id", name="uix_pet_date_offered_svc"),)
