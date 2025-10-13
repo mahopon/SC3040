@@ -1,16 +1,14 @@
 import { ProfileAPI } from "@/api"
-import type { ProfileResponse } from "@/api/profile/types"
+import type { TProfileResponse } from "@/api/profile/types"
 import Navbar from "@/components/Navbar"
 import About from "@/components/profile/About"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { userPlaceholderUrl } from "@/assets"
-import Modal, { type TModalHandle } from "@/components/ui/Modal"
 import ServiceContent from "@/components/profile/ServiceContent"
 import PetContent from "@/components/profile/PetContent"
 
 const Profile = () => {
-  const petModalRef = useRef<TModalHandle>(null)
-  const [user, setUser] = useState<ProfileResponse>()
+  const [user, setUser] = useState<TProfileResponse>()
 
   useEffect(() => {
     ProfileAPI.fetchProfile().then((data) => setUser(data))
@@ -29,7 +27,9 @@ const Profile = () => {
               className="h-full w-full object-cover rounded-full"
             />
           </div>
-          <div className="text-4xl font-bold">{user?.first_name}</div>
+          <div className="text-4xl font-bold">
+            {user?.first_name} {user?.last_name}
+          </div>
         </div>
       </div>
 
@@ -40,9 +40,9 @@ const Profile = () => {
               role={user.type}
               address={user.address}
               phoneNo={user.contact_num}
-              email=""
               gender={user.gender}
               dateOfBirth={user.dob}
+              yearsOfExperience={user.yoe}
             />
 
             {user.type === "caretaker" && <ServiceContent />}
@@ -50,32 +50,6 @@ const Profile = () => {
           </div>
         </div>
       )}
-
-      <Modal
-        ref={petModalRef}
-        header="Add Pet"
-        actionButtons={[
-          {
-            label: "Cancel",
-            onClick: () => petModalRef.current?.closeModal(),
-          },
-          {
-            label: "Add",
-            onClick: () => {
-              petModalRef.current?.closeModal()
-              console.log("Adding pet...")
-            },
-            style: "bg-blue-500 text-white hover:bg-blue-600",
-          },
-        ]}
-      >
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="petName">
-            Pet Name
-          </label>
-          <input id="petName" />
-        </div>
-      </Modal>
     </div>
   )
 }

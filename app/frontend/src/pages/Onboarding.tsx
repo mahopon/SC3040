@@ -1,17 +1,17 @@
 import { OnboardingAPI } from "@/api"
+import type { TUserGender, TUserRole } from "@/api/profile/types"
 import { UserProfile, RoleSelection, PetProfile, PetService } from "@/components/onboarding"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 
 type TOnboardingSteps = "role" | "user-profile" | "pet-profile" | "pet-service"
-export type TUserRole = "owner" | "caretaker"
 export type TOnboardingForm = {
   userProfile: {
     firstName: string
     lastName: string
     dateOfBirth: string
-    gender: "Male" | "Female" | ""
+    gender: TUserGender | ""
     phone: string
     address: string
     yearsOfExperience?: number
@@ -30,6 +30,7 @@ export type TOnboardingForm = {
     rate: number
     duration: number
     day: number[]
+    locations: number[]
   }[]
 }
 

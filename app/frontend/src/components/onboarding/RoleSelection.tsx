@@ -1,7 +1,7 @@
 import { useState } from "react"
 import Layout from "./Layout"
 import { petOwnerUrl, serviceProviderUrl } from "@/assets"
-import type { TUserRole } from "@/pages/Onboarding"
+import type { TUserRole } from "@/api/profile/types"
 
 type TRoleCardProps = {
   icon: string

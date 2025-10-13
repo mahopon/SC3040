@@ -1,14 +1,19 @@
-export type ProfileResponse = {
+export type TUserRole = "caretaker" | "owner"
+
+export type TUserGender = "male" | "female" | "others"
+
+export type TProfileResponse = {
   first_name: string
   last_name: string
   contact_num: string
   dob: string
   address: string
-  gender: string
-  type: "caretaker" | "owner"
+  gender: TUserGender
+  type: TUserRole
   profile_picture?: string
+  yoe?: number
 }
 
-export type ProfilePictureResponse = {
+export type TProfilePictureResponse = {
   profilePicture: string
 }

@@ -1,8 +1,8 @@
 import { baseURL, http } from "../client"
 import { API } from "../endpoints"
-import type { AuthenticatedResponse, LoginProps, SignUpProps, SignUpResponse } from "./types"
+import type { TAuthenticatedResponse, TLoginProps, TSignUpProps, TSignUpResponse } from "./types"
 
-export const isAuthenticated = async (): Promise<AuthenticatedResponse> => {
+export const isAuthenticated = async (): Promise<TAuthenticatedResponse> => {
   const res = await http.get(API.PROFILE.GET)
   if (res.status === 200) {
     return { authenticated: true }
@@ -11,7 +11,7 @@ export const isAuthenticated = async (): Promise<AuthenticatedResponse> => {
   }
 }
 
-export const login = async (data: LoginProps): Promise<void> => {
+export const login = async (data: TLoginProps): Promise<void> => {
   try {
     const res = await http.post<void>(API.AUTH.LOGIN, data)
     console.log("POST login: ", res)
@@ -22,8 +22,8 @@ export const login = async (data: LoginProps): Promise<void> => {
   }
 }
 
-export const signup = async (data: SignUpProps): Promise<SignUpResponse> => {
-  const res = await http.post<SignUpResponse>(API.AUTH.SIGNUP, data)
+export const signup = async (data: TSignUpProps): Promise<TSignUpResponse> => {
+  const res = await http.post<TSignUpResponse>(API.AUTH.SIGNUP, data)
   if (res.status === 200) return res.data
 
   console.log(`signup: ${res}`)

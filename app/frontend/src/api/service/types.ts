@@ -1,6 +1,6 @@
-export type ServiceOption = {
+export type TServiceOption = {
   id: number
   name: string
 }
 
-export type ServiceListResponse = ServiceOption[]
+export type TServiceListResponse = TServiceOption[]

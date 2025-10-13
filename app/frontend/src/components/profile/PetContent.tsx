@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import Modal, { type TModalHandle } from "../ui/Modal"
 import ContentLayout from "./ContentLayout"
 import PetCard from "./PetCard"
@@ -6,6 +6,9 @@ import { INPUT_BASE } from "@/constants/form"
 import { ErrorText, Label } from "../form"
 import { PET_SPECIES } from "@/constants/pet"
 import { useForm } from "react-hook-form"
+import type { TPet, TPets } from "@/api/pet/types"
+import { PetAPI } from "@/api"
+import DeleteModal from "../ui/DeleteModal"
 
 type TPetForm = {
   name: string
@@ -16,17 +19,81 @@ type TPetForm = {
   preferences?: string
 }
 
+const defaultPet: TPetForm = {
+  name: "",
+  species: "",
+  breed: "",
+  age: 0,
+  healthCondition: "",
+  preferences: "",
+}
+
 const PetContent = () => {
   const {
     register,
     watch,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<TPetForm>()
   const selectedSpecies = watch("species")
 
   const petModalRef = useRef<TModalHandle>(null)
+  const formRef = useRef<HTMLFormElement>(null)
+  const deleteModalRef = useRef<TModalHandle>(null)
   const [selectedPet, setSelectedPet] = useState<number>()
+  const [pets, setPets] = useState<TPets>([])
+
+  const onAdd = useCallback(() => {
+    setSelectedPet(undefined)
+    reset(defaultPet)
+    petModalRef.current?.openModal()
+  }, [reset])
+
+  const onEdit = useCallback(
+    ({ id, name, species, breed, age, health, preferences }: TPet) => {
+      setSelectedPet(id)
+      reset({ name, species, breed, age, healthCondition: health, preferences })
+      petModalRef.current?.openModal()
+    },
+    [pets, reset],
+  )
+
+  const onDelete = useCallback((petId: number) => {
+    setSelectedPet(petId)
+    deleteModalRef.current?.openModal()
+  }, [])
+
+  const handleAddPet = useCallback(async (data: TPetForm) => {
+    await PetAPI.addPet({
+      ...data,
+      health: data.healthCondition || "",
+      preferences: data.preferences || "",
+    })
+      .then(() => {
+        PetAPI.fetchPetsByOwner().then((data) => setPets(data))
+      })
+      .catch((err) => alert(err.message))
+      .finally(() => petModalRef.current?.closeModal())
+  }, [])
+
+  const handleEditPet = useCallback(async (data: TPetForm) => {
+    console.log(`Editing Pet: ${data}`)
+    petModalRef.current?.closeModal()
+  }, [])
+
+  const handleDeletePet = useCallback(async (petId: number) => {
+    await PetAPI.deletePet(petId)
+      .then(() => PetAPI.fetchPetsByOwner().then((data) => setPets(data)))
+      .catch((err) => alert(err.message))
+      .finally(() => deleteModalRef.current?.closeModal())
+  }, [])
+
+  const submitForm = () => formRef.current?.requestSubmit()
+
+  useEffect(() => {
+    PetAPI.fetchPetsByOwner().then((data) => setPets(data))
+  }, [])
 
   return (
     <>
@@ -34,39 +101,18 @@ const PetContent = () => {
         title="Pet(s) Owned"
         action={{
           label: "+ Add Pet",
-          onClick: () => petModalRef.current?.openModal(),
+          onClick: () => onAdd(),
         }}
-        children={
-          <>
+        children={pets.map((pet) => {
+          const { id, name, species, breed, age, health, preferences } = pet
+          return (
             <PetCard
-              pet={{
-                id: 0,
-                name: "Happy",
-                species: "Dog",
-                breed: "Labrador Retriever",
-                age: 2,
-                health: "Healthy",
-                preferences:
-                  "Prefers beef over anything else, does not like medicine, does not like needles, very scared of the vet",
-              }}
-              onEdit={(id: number) => console.log("Editing pet: ", id)}
-              onDelete={(id: number) => console.log("Deleting pet: ", id)}
+              pet={{ id, name, species, breed, age, health, preferences }}
+              onEdit={() => onEdit(pet)}
+              onDelete={() => onDelete(id)}
             />
-            <PetCard
-              pet={{
-                id: 0,
-                name: "Milk",
-                species: "Cat",
-                breed: "Persian",
-                age: 5,
-                health: "Healthy",
-                preferences: "Very friendly, does not mind being touches, bla bla bla bla bla",
-              }}
-              onEdit={(id: number) => console.log("Editing pet: ", id)}
-              onDelete={(id: number) => console.log("Deleting pet: ", id)}
-            />
-          </>
-        }
+          )
+        })}
       />
       <Modal
         ref={petModalRef}
@@ -79,15 +125,15 @@ const PetContent = () => {
           },
           {
             label: selectedPet ? "Save" : "Add",
-            onClick: () => {
-              petModalRef.current?.closeModal()
-              console.log(selectedPet ? "Saving service..." : "Adding service...")
-            },
+            onClick: submitForm,
           },
         ]}
       >
         <form
-          onSubmit={handleSubmit((data) => console.log(data))}
+          ref={formRef}
+          onSubmit={handleSubmit((data) =>
+            selectedPet ? handleEditPet(data) : handleAddPet(data),
+          )}
           className="max-w-[620px] w-full grid grid-cols-1 md:grid-cols-2 gap-6"
         >
           <div className="col-span-1">
@@ -186,6 +232,11 @@ const PetContent = () => {
           </div>
         </form>
       </Modal>
+      <DeleteModal
+        ref={deleteModalRef}
+        onConfirm={() => handleDeletePet(selectedPet!)}
+        onCancel={() => deleteModalRef.current?.closeModal()}
+      />
     </>
   )
 }

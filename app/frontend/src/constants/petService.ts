@@ -1,9 +1,9 @@
-export interface DayOption {
+export interface IDayOption {
   value: number
   label: string
 }
 
-export const DAYS_OF_WEEK: DayOption[] = [
+export const DAYS_OF_WEEK: IDayOption[] = [
   { value: 1, label: "Monday" },
   { value: 2, label: "Tuesday" },
   { value: 3, label: "Wednesday" },

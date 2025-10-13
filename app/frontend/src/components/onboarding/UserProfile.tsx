@@ -3,6 +3,7 @@ import Layout from "./Layout"
 import type { TOnboardingForm } from "@/pages/Onboarding"
 import { ErrorText, Label } from "@/components/form"
 import { INPUT_BASE } from "@/constants/form"
+import { USER_GENDER } from "@/constants/user"
 
 type TUserProfileProps = {
   onContinue: () => void
@@ -80,9 +81,9 @@ export default function UserProfile({ onContinue, onBack }: TUserProfileProps) {
                 <option value="" disabled>
                   Select…
                 </option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="others">Prefer not to say</option>
+                {Object.entries(USER_GENDER).map(([value, label]) => (
+                  <option value={value}>{label}</option>
+                ))}
               </select>
               <ErrorText error={errors.userProfile?.gender} />
             </div>

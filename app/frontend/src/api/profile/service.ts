@@ -1,10 +1,10 @@
 import { http } from "../client"
 import { API } from "../endpoints"
-import type { ProfilePictureResponse, ProfileResponse } from "./types"
+import type { TProfilePictureResponse, TProfileResponse } from "./types"
 
-export const fetchProfile = async (): Promise<ProfileResponse> => {
+export const fetchProfile = async (): Promise<TProfileResponse> => {
   try {
-    const res = await http.get<ProfileResponse>(API.PROFILE.GET)
+    const res = await http.get<TProfileResponse>(API.PROFILE.GET)
     console.log("GET profile: ", res)
     return res.data
   } catch (err) {
@@ -13,9 +13,9 @@ export const fetchProfile = async (): Promise<ProfileResponse> => {
   }
 }
 
-export const fetchProfilePicture = async (): Promise<ProfilePictureResponse> => {
+export const fetchProfilePicture = async (): Promise<TProfilePictureResponse> => {
   try {
-    const res = await http.get<ProfileResponse>(API.PROFILE.GET)
+    const res = await http.get<TProfileResponse>(API.PROFILE.GET)
     console.log("GET profile: ", res)
     return { profilePicture: res.data.profile_picture ?? "" }
   } catch (err) {

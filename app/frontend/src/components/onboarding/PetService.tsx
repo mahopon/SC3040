@@ -3,10 +3,11 @@ import { useFieldArray, useFormContext, type FieldError } from "react-hook-form"
 import Layout from "./Layout"
 import { ErrorText, Label } from "../form"
 import { useEffect, useState } from "react"
-import type { ServiceListResponse } from "@/api/service/types"
-import { ServiceAPI } from "@/api"
+import type { TServiceListResponse } from "@/api/service/types"
+import { LocationAPI, ServiceAPI } from "@/api"
 import { DAYS_OF_WEEK } from "@/constants/petService"
 import { INPUT_BASE } from "@/constants/form"
+import type { TLocations } from "@/api/location/types"
 
 type TPetServiceProps = {
   onContinue: () => void
@@ -19,6 +20,7 @@ const defaultService = {
   rate: 0,
   duration: 0,
   day: [],
+  locations: [],
 }
 
 const PetService = ({ onContinue, onBack }: TPetServiceProps) => {
@@ -31,13 +33,19 @@ const PetService = ({ onContinue, onBack }: TPetServiceProps) => {
     control,
     name: "petService",
   })
-  const [services, setServices] = useState<ServiceListResponse>([])
+  const [services, setServices] = useState<TServiceListResponse>([])
+  const [locations, setLocations] = useState<TLocations>([])
 
   const cardBase = "p-4 border border-gray-200 rounded-lg shadow-sm mb-4 w-full"
 
   useEffect(() => {
     ServiceAPI.fetchServiceList().then((data) => setServices(data))
+    LocationAPI.fetchLocations().then((data) => setLocations(data))
   }, [])
+
+  useEffect(() => {
+    if (fields.length === 0) append(defaultService)
+  }, [append, fields.length])
 
   return (
     <Layout
@@ -112,15 +120,38 @@ const PetService = ({ onContinue, onBack }: TPetServiceProps) => {
                     </div>
 
                     <div className="col-span-1 md:col-span-2">
+                      <Label htmlFor={`petService.${index}.locations`} text="Locations" />
+                      <select
+                        id={`petService.${index}.locations`}
+                        className={INPUT_BASE}
+                        // Set the 'multiple' attribute to allow multi-selection
+                        multiple
+                        aria-invalid={!!errors.petService?.[index]?.locations}
+                        {...register(`petService.${index}.locations` as const, {
+                          required: "Locations is required",
+                          valueAsNumber: true,
+                        })}
+                        defaultValue={field.locations?.map(String) || []}
+                      >
+                        {locations.map((location) => (
+                          <option key={location.id} value={location.id}>
+                            {location.name}
+                          </option>
+                        ))}
+                      </select>
+                      <ErrorText error={errors.petService?.[index]?.locations as FieldError} />
+                    </div>
+
+                    <div className="col-span-1 md:col-span-2">
                       <Label htmlFor={`petService.${index}.description`} text="Description" />
                       <textarea
                         id={`petService.${index}.description`}
                         className={INPUT_BASE}
                         aria-invalid={!!errors.petService?.[index]?.description}
-                        {...register(`petService.${index}.serviceId` as const, {
+                        {...register(`petService.${index}.description` as const, {
                           required: "Description is required",
                         })}
-                        defaultValue={field.description || 0}
+                        defaultValue={field.description || ""}
                       />
                       <ErrorText error={errors.petService?.[index]?.description} />
                     </div>

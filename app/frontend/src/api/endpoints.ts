@@ -24,4 +24,5 @@ export const API = {
   LOCATION: {
     GET: "/location",
   },
+  PET: "/pet",
 }

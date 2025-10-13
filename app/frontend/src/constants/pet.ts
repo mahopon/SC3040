@@ -1,15 +1,15 @@
-export interface PetBreed {
+export interface IPetBreed {
   value: string
   label: string
 }
 
-export interface PetSpecies {
+export interface IPetSpecies {
   value: string
   label: string
-  breeds: PetBreed[]
+  breeds: IPetBreed[]
 }
 
-export const PET_SPECIES: PetSpecies[] = [
+export const PET_SPECIES: IPetSpecies[] = [
   {
     value: "dog",
     label: "Dog",
