@@ -2,6 +2,7 @@ import { useFormContext } from "react-hook-form"
 import Layout from "./Layout"
 import type { TOnboardingForm } from "@/pages/Onboarding"
 import { ErrorText, Label } from "@/components/form"
+import { INPUT_BASE } from "@/constants/form"
 
 type TUserProfileProps = {
   onContinue: () => void
@@ -13,8 +14,6 @@ export default function UserProfile({ onContinue, onBack }: TUserProfileProps) {
     register,
     formState: { errors },
   } = useFormContext<TOnboardingForm>()
-
-  const inputBase = "w-full px-3 py-3 border rounded-md focus:outline-none focus:border-black"
 
   return (
     <Layout
@@ -37,7 +36,7 @@ export default function UserProfile({ onContinue, onBack }: TUserProfileProps) {
               <input
                 id="firstName"
                 type="text"
-                className={inputBase}
+                className={INPUT_BASE}
                 aria-invalid={!!errors.userProfile?.firstName}
                 {...register("userProfile.firstName", { required: "First name is required" })}
               />
@@ -49,7 +48,7 @@ export default function UserProfile({ onContinue, onBack }: TUserProfileProps) {
               <input
                 id="lastName"
                 type="text"
-                className={inputBase}
+                className={INPUT_BASE}
                 aria-invalid={!!errors.userProfile?.lastName}
                 {...register("userProfile.lastName", { required: "Last name is required" })}
               />
@@ -61,7 +60,7 @@ export default function UserProfile({ onContinue, onBack }: TUserProfileProps) {
               <input
                 id="dateOfBirth"
                 type="date"
-                className={inputBase}
+                className={INPUT_BASE}
                 aria-invalid={!!errors.userProfile?.dateOfBirth}
                 {...register("userProfile.dateOfBirth", {
                   required: "Date of birth is required",
@@ -74,7 +73,7 @@ export default function UserProfile({ onContinue, onBack }: TUserProfileProps) {
               <Label htmlFor="gender" text="Gender" />
               <select
                 id="gender"
-                className={inputBase}
+                className={INPUT_BASE}
                 aria-invalid={!!errors.userProfile?.gender}
                 {...register("userProfile.gender", { required: "Please select a gender" })}
               >
@@ -118,7 +117,7 @@ export default function UserProfile({ onContinue, onBack }: TUserProfileProps) {
               <input
                 id="address"
                 type="text"
-                className={inputBase}
+                className={INPUT_BASE}
                 aria-invalid={!!errors.userProfile?.address}
                 placeholder="Block / Street / Unit / Postal Code"
                 {...register("userProfile.address", { required: "Address is required" })}

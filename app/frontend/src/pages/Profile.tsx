@@ -2,13 +2,14 @@ import { ProfileAPI } from "@/api"
 import type { ProfileResponse } from "@/api/profile/types"
 import Navbar from "@/components/Navbar"
 import About from "@/components/profile/About"
-import ContentLayout from "@/components/profile/ContentLayout"
-import PetCard from "@/components/profile/PetCard"
-import ServiceCard from "@/components/profile/ServiceCard"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { userPlaceholderUrl } from "@/assets"
+import Modal, { type TModalHandle } from "@/components/ui/Modal"
+import ServiceContent from "@/components/profile/ServiceContent"
+import PetContent from "@/components/profile/PetContent"
 
 const Profile = () => {
+  const petModalRef = useRef<TModalHandle>(null)
   const [user, setUser] = useState<ProfileResponse>()
 
   useEffect(() => {
@@ -44,92 +45,37 @@ const Profile = () => {
               dateOfBirth={user.dob}
             />
 
-            {user.type === "caretaker" && (
-              <ContentLayout
-                title="Service(s) Provided"
-                action={{
-                  label: "+ Add Service",
-                  onClick: () => console.log("Add service"),
-                }}
-                children={
-                  <>
-                    <ServiceCard
-                      service={{
-                        id: 1,
-                        serviceId: 1,
-                        name: "Dog Grooming",
-                        description:
-                          "Full grooming service including bath, haircut, nail trimming, and ear cleaning for all dog breeds.",
-                        rate: 80,
-                        duration: 120,
-                        days: [1, 2, 3, 4, 5],
-                      }}
-                      onEdit={(id: number) => console.log("Editing service: ", id)}
-                      onDelete={(id: number) => console.log("Deleting service: ", id)}
-                    />
-                    <ServiceCard
-                      service={{
-                        id: 1,
-                        serviceId: 1,
-                        name: "Cat Grooming",
-                        description:
-                          "Gentle grooming for cats including bath, brushing, and nail trimming with specialized care.",
-                        rate: 50,
-                        duration: 60,
-                        days: [1, 2, 3, 4, 5],
-                      }}
-                      onEdit={(id: number) => console.log("Editing service: ", id)}
-                      onDelete={(id: number) => console.log("Deleting service: ", id)}
-                    />
-                  </>
-                }
-              />
-            )}
-
-            {user.type === "owner" && (
-              <ContentLayout
-                title="Pet(s) Owned"
-                action={{
-                  label: "+ Add Pet",
-                  onClick: () => console.log("Add pet"),
-                }}
-                children={
-                  <>
-                    <PetCard
-                      pet={{
-                        id: 0,
-                        name: "Happy",
-                        species: "Dog",
-                        breed: "Labrador Retriever",
-                        age: 2,
-                        health: "Healthy",
-                        preferences:
-                          "Prefers beef over anything else, does not like medicine, does not like needles, very scared of the vet",
-                      }}
-                      onEdit={(id: number) => console.log("Editing pet: ", id)}
-                      onDelete={(id: number) => console.log("Deleting pet: ", id)}
-                    />
-                    <PetCard
-                      pet={{
-                        id: 0,
-                        name: "Milk",
-                        species: "Cat",
-                        breed: "Persian",
-                        age: 5,
-                        health: "Healthy",
-                        preferences:
-                          "Very friendly, does not mind being touches, bla bla bla bla bla",
-                      }}
-                      onEdit={(id: number) => console.log("Editing pet: ", id)}
-                      onDelete={(id: number) => console.log("Deleting pet: ", id)}
-                    />
-                  </>
-                }
-              />
-            )}
+            {user.type === "caretaker" && <ServiceContent />}
+            {user.type === "owner" && <PetContent />}
           </div>
         </div>
       )}
+
+      <Modal
+        ref={petModalRef}
+        header="Add Pet"
+        actionButtons={[
+          {
+            label: "Cancel",
+            onClick: () => petModalRef.current?.closeModal(),
+          },
+          {
+            label: "Add",
+            onClick: () => {
+              petModalRef.current?.closeModal()
+              console.log("Adding pet...")
+            },
+            style: "bg-blue-500 text-white hover:bg-blue-600",
+          },
+        ]}
+      >
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="petName">
+            Pet Name
+          </label>
+          <input id="petName" />
+        </div>
+      </Modal>
     </div>
   )
 }

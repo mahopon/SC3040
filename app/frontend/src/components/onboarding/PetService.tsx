@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import type { ServiceListResponse } from "@/api/service/types"
 import { ServiceAPI } from "@/api"
 import { DAYS_OF_WEEK } from "@/constants/petService"
+import { INPUT_BASE } from "@/constants/form"
 
 type TPetServiceProps = {
   onContinue: () => void
@@ -32,7 +33,6 @@ const PetService = ({ onContinue, onBack }: TPetServiceProps) => {
   })
   const [services, setServices] = useState<ServiceListResponse>([])
 
-  const inputBase = "w-full px-3 py-3 border rounded-md focus:outline-none focus:border-black"
   const cardBase = "p-4 border border-gray-200 rounded-lg shadow-sm mb-4 w-full"
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const PetService = ({ onContinue, onBack }: TPetServiceProps) => {
               <input
                 id="yearsOfExperience"
                 type="number"
-                className={inputBase}
+                className={INPUT_BASE}
                 aria-invalid={!!errors.userProfile?.yearsOfExperience}
                 {...register("userProfile.yearsOfExperience", {
                   required: "Years of experience is required",
@@ -90,7 +90,7 @@ const PetService = ({ onContinue, onBack }: TPetServiceProps) => {
                       <Label htmlFor={`petService.${index}.serviceId`} text="Service Type" />
                       <select
                         id={`petService.${index}.serviceId`}
-                        className={inputBase}
+                        className={INPUT_BASE}
                         aria-invalid={!!errors.petService?.[index]?.serviceId}
                         {...register(`petService.${index}.serviceId` as const, {
                           required: "Service type is required",
@@ -115,7 +115,7 @@ const PetService = ({ onContinue, onBack }: TPetServiceProps) => {
                       <Label htmlFor={`petService.${index}.description`} text="Description" />
                       <textarea
                         id={`petService.${index}.description`}
-                        className={inputBase}
+                        className={INPUT_BASE}
                         aria-invalid={!!errors.petService?.[index]?.description}
                         {...register(`petService.${index}.serviceId` as const, {
                           required: "Description is required",
@@ -131,7 +131,7 @@ const PetService = ({ onContinue, onBack }: TPetServiceProps) => {
                         id={`petService.${index}.rate`}
                         type="number"
                         placeholder="e.g. 25.00"
-                        className={inputBase}
+                        className={INPUT_BASE}
                         aria-invalid={!!errors.petService?.[index]?.rate}
                         {...register(`petService.${index}.rate` as const, {
                           required: "Rate is required",
@@ -148,7 +148,7 @@ const PetService = ({ onContinue, onBack }: TPetServiceProps) => {
                         id={`petService.${index}.duration`}
                         type="number"
                         placeholder="0"
-                        className={inputBase}
+                        className={INPUT_BASE}
                         aria-invalid={!!errors.petService?.[index]?.duration}
                         {...register(`petService.${index}.duration` as const, {
                           required: "Duration is required",

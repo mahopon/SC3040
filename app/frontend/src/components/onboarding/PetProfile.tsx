@@ -3,6 +3,7 @@ import { useFormContext } from "react-hook-form"
 import Layout from "./Layout"
 import { ErrorText, Label } from "../form"
 import { PET_SPECIES } from "@/constants/pet"
+import { INPUT_BASE } from "@/constants/form"
 
 type TPetProfileProps = {
   onContinue: () => void
@@ -16,8 +17,6 @@ const PetProfile = ({ onContinue, onBack }: TPetProfileProps) => {
     formState: { errors },
   } = useFormContext<TOnboardingForm>()
   const selectedSpecies = watch("petProfile.species")
-
-  const inputBase = "w-full px-3 py-3 border rounded-md focus:outline-none focus:border-black"
 
   return (
     <Layout
@@ -40,7 +39,7 @@ const PetProfile = ({ onContinue, onBack }: TPetProfileProps) => {
               <input
                 id="name"
                 type="text"
-                className={inputBase}
+                className={INPUT_BASE}
                 aria-invalid={!!errors.petProfile?.name}
                 {...register("petProfile.name", { required: "Pet name is required" })}
               />
@@ -51,7 +50,7 @@ const PetProfile = ({ onContinue, onBack }: TPetProfileProps) => {
               <Label htmlFor="species" text="Species" />
               <select
                 id="species"
-                className={inputBase}
+                className={INPUT_BASE}
                 aria-invalid={!!errors.petProfile?.species}
                 {...register("petProfile.species", { required: "Species is required" })}
               >
@@ -72,7 +71,7 @@ const PetProfile = ({ onContinue, onBack }: TPetProfileProps) => {
               <Label htmlFor="breed" text="Breed" />
               <select
                 id="breed"
-                className={inputBase}
+                className={INPUT_BASE}
                 aria-invalid={!!errors.petProfile?.breed}
                 disabled={!selectedSpecies}
                 {...register("petProfile.breed", { required: "Breed is required" })}
@@ -97,7 +96,7 @@ const PetProfile = ({ onContinue, onBack }: TPetProfileProps) => {
               <input
                 id="age"
                 type="number"
-                className={inputBase}
+                className={INPUT_BASE}
                 aria-invalid={!!errors.petProfile?.age}
                 {...register("petProfile.age", {
                   required: "Age is required",
@@ -110,7 +109,7 @@ const PetProfile = ({ onContinue, onBack }: TPetProfileProps) => {
               <Label htmlFor="healthCondition" text="Health Condition" />
               <textarea
                 id="healthCondition"
-                className={inputBase}
+                className={INPUT_BASE}
                 aria-invalid={!!errors.petProfile?.healthCondition}
                 placeholder="Any health conditions, allergies, or special requirements..."
                 {...register("petProfile.healthCondition")}
@@ -122,7 +121,7 @@ const PetProfile = ({ onContinue, onBack }: TPetProfileProps) => {
               <Label htmlFor="preferences" text="Preferences" />
               <textarea
                 id="preferences"
-                className={inputBase}
+                className={INPUT_BASE}
                 aria-invalid={!!errors.petProfile?.preferences}
                 placeholder="Any special care instructions, behavioural notes, or preferences..."
                 {...register("petProfile.preferences")}
