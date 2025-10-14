@@ -52,7 +52,7 @@ class ServiceRepository:
 
         stmt = update(OfferedService).where(OfferedService.id == offered_service_id).values(**values)
         self.db_session.execute(stmt)
-        self.db_session.flush() 
+        self.db_session.flush()
 
         if location_ids is not None:
             offered_service = self.get_offered_service_by_id(offered_service_id=offered_service_id)

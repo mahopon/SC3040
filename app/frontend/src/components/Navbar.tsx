@@ -1,22 +1,18 @@
 import { Link, useNavigate } from "react-router-dom"
 import AppLogo from "./AppLogo"
-import { useEffect, useState } from "react"
-import { AuthAPI, ProfileAPI } from "@/api"
+import { AuthAPI } from "@/api"
 import { userPlaceholderUrl } from "@/assets"
+import { useUser } from "@/context/UserContext"
 
 const Navbar = () => {
   const navigate = useNavigate()
-  const [profilePicture, setProfilePicture] = useState<string>("")
+  const {
+    user: { profile_picture },
+  } = useUser()
 
   const handleLogout = () => {
     AuthAPI.logout().then(() => navigate("/login", { replace: true }))
   }
-
-  useEffect(() => {
-    ProfileAPI.fetchProfilePicture()
-      .then(({ profilePicture }) => setProfilePicture(profilePicture))
-      .catch(() => navigate("/login", { replace: true }))
-  }, [])
 
   return (
     <nav className="w-full shadow-md flex items-center justify-between px-8 py-5">
@@ -33,7 +29,7 @@ const Navbar = () => {
         <div className="relative group">
           <button className="h-10 w-10 hover:cursor-pointer" aria-label="User profile">
             <img
-              src={profilePicture || userPlaceholderUrl}
+              src={profile_picture || userPlaceholderUrl}
               alt="Profile"
               className="h-full w-full object-cover rounded-full"
             />

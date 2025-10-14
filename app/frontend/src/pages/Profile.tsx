@@ -1,11 +1,11 @@
 import { ProfileAPI } from "@/api"
-import type { TProfileResponse, TUserGender } from "@/api/profile/types"
+import type { TUserGender } from "@/api/profile/types"
 import Navbar from "@/components/Navbar"
 import About from "@/components/profile/About"
-import { useEffect, useState } from "react"
 import { userPlaceholderUrl } from "@/assets"
 import ServiceContent from "@/components/profile/ServiceContent"
 import PetContent from "@/components/profile/PetContent"
+import { useUser } from "@/context/UserContext"
 
 export type TUserForm = {
   profilePicture?: FileList
@@ -19,7 +19,7 @@ export type TUserForm = {
 }
 
 const Profile = () => {
-  const [user, setUser] = useState<TProfileResponse>()
+  const { user, fetchProfile } = useUser()
 
   const handleUpdateProfile = async ({
     firstName,
@@ -44,14 +44,8 @@ const Profile = () => {
         if (profilePicture?.item(0)) await ProfileAPI.updateProfilePicture(profilePicture.item(0)!)
       })
       .catch((err) => alert(err.message))
-      .finally(async () => {
-        await ProfileAPI.fetchProfile().then((data) => setUser(data))
-      })
+      .finally(async () => fetchProfile())
   }
-
-  useEffect(() => {
-    ProfileAPI.fetchProfile().then((data) => setUser(data))
-  }, [])
 
   return (
     <div className="min-h-screen">
