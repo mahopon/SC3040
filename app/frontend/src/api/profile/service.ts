@@ -8,7 +8,7 @@ export const fetchProfile = async (): Promise<TProfileResponse> => {
     console.log("GET profile: ", res)
     return {
       ...res.data,
-      profile_picture: `/api${res.data.profile_picture}`,
+      profile_picture: res.data.profile_picture ? `/api${res.data.profile_picture}` : "",
     }
   } catch (err) {
     console.log(`GET profile: ${err}`)
