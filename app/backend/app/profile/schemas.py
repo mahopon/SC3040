@@ -54,6 +54,8 @@ class ProfileUpdate(BaseModel):
 
     first_name: Optional[Annotated[str, StringConstraints(min_length=3)]] = None
     last_name: Optional[Annotated[str, StringConstraints(min_length=3)]] = None
+    dob: Optional[datetime] = None
+    gender: Optional[Gender] = None
     contact_num: Optional[str] = None
     address: Optional[str] = None
 

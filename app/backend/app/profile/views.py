@@ -35,7 +35,7 @@ def update_profile(
     petcaretaker_service: PetCareTakerSvc,
 ) -> Response:
     profile = profile_service.get_profile(profile_id=id)
-    update = ProfileUpdate(**profile.model_dump(exclude={"yoe"}, exclude_unset=True, exclude_none=True))
+    update = ProfileUpdate(**profile_update.model_dump(exclude={"yoe"}, exclude_unset=True, exclude_none=True))
     profile_service.update_profile(profile_id=id, profile_update=update)
     if profile.type == Role.PetCareTaker.value:
         if profile_update.yoe is not None:

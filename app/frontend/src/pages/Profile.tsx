@@ -1,5 +1,5 @@
 import { ProfileAPI } from "@/api"
-import type { TProfileResponse } from "@/api/profile/types"
+import type { TProfileResponse, TUserGender } from "@/api/profile/types"
 import Navbar from "@/components/Navbar"
 import About from "@/components/profile/About"
 import { useEffect, useState } from "react"
@@ -7,8 +7,47 @@ import { userPlaceholderUrl } from "@/assets"
 import ServiceContent from "@/components/profile/ServiceContent"
 import PetContent from "@/components/profile/PetContent"
 
+export type TUserForm = {
+  profilePicture?: FileList
+  firstName: string
+  lastName: string
+  dateOfBirth: string
+  gender: TUserGender
+  phone: string
+  address: string
+  yoe?: number
+}
+
 const Profile = () => {
   const [user, setUser] = useState<TProfileResponse>()
+
+  const handleUpdateProfile = async ({
+    firstName,
+    lastName,
+    dateOfBirth,
+    gender,
+    phone,
+    address,
+    yoe,
+    profilePicture,
+  }: TUserForm) => {
+    await ProfileAPI.updateProfile({
+      first_name: firstName,
+      last_name: lastName,
+      dob: dateOfBirth,
+      gender: gender,
+      contact_num: phone,
+      address: address,
+      yoe: yoe,
+    })
+      .then(async () => {
+        if (profilePicture?.item(0)) await ProfileAPI.updateProfilePicture(profilePicture.item(0)!)
+      })
+      .catch((err) => alert(err.message))
+      .finally(async () => {
+        await ProfileAPI.fetchProfile().then((data) => setUser(data))
+      })
+  }
 
   useEffect(() => {
     ProfileAPI.fetchProfile().then((data) => setUser(data))
@@ -38,11 +77,14 @@ const Profile = () => {
           <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-8">
             <About
               role={user.type}
+              firstName={user.first_name}
+              lastName={user.last_name}
               address={user.address}
               phoneNo={user.contact_num}
               gender={user.gender}
               dateOfBirth={user.dob}
               yearsOfExperience={user.yoe}
+              handleUpdateProfile={handleUpdateProfile}
             />
 
             {user.type === "caretaker" && <ServiceContent />}

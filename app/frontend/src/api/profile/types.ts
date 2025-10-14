@@ -17,3 +17,13 @@ export type TProfileResponse = {
 export type TProfilePictureResponse = {
   profilePicture: string
 }
+
+export type TUpdateProfileRequest = {
+  first_name: string
+  last_name: string
+  contact_num: string
+  dob: string
+  address: string
+  gender: TUserGender
+  yoe?: number
+}

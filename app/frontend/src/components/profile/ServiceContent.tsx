@@ -136,11 +136,11 @@ const ServiceContent = () => {
           {
             label: "Cancel",
             onClick: () => serviceModalRef.current?.closeModal(),
+            variant: "secondary",
           },
           {
             label: selectedService ? "Save" : "Add",
             onClick: submitForm,
-            style: "bg-blue-500 text-white hover:bg-blue-600",
           },
         ]}
       >
