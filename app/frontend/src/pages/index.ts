@@ -1,7 +1,11 @@
+import Booking from "./Booking"
+import Bookings from "./Bookings"
 import Home from "./Home"
 import Login from "./Login"
 import Onboarding from "./Onboarding"
 import Profile from "./Profile"
+import ServiceBrowsing from "./ServiceBrowsing"
+import ServiceDetail from "./ServiceDetail"
 import SignUp from "./SignUp"
 
-export { Home, Login, Onboarding, Profile, SignUp }
+export { Booking, Bookings, Home, Login, Onboarding, Profile, ServiceBrowsing, ServiceDetail, SignUp }
