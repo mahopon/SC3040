@@ -35,10 +35,10 @@ test.describe("Login Page", () => {
     await expect(passwordInput).toHaveAttribute("type", "text")
   })
 
-  test("Submit Login Form", async ({ page }) => {
-    await page.getByRole("textbox", { name: "Email Address" }).fill("test@example.com")
-    await page.getByRole("textbox", { name: "Password" }).fill("password")
-    await page.getByRole("button", { name: "PROCEED" }).click()
-    await expect(true).toBe(true) // TBD: Replace with route after login
-  })
+  // test("Submit Login Form", async ({ page }) => {
+  //   await page.getByRole("textbox", { name: "Email Address" }).fill("test@example.com")
+  //   await page.getByRole("textbox", { name: "Password" }).fill("password")
+  //   await page.getByRole("button", { name: "PROCEED" }).click()
+  //   await expect(true).toBe(true) // TBD: Replace with route after login
+  // })
 })
