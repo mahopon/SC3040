@@ -10,7 +10,7 @@ export type TLoginProps = {
 }
 
 export type TSignUpProps = {
-  name: string
+  first_name: string
   email: string
   password: string
   dob: string // Will be filled with placeholder values for now

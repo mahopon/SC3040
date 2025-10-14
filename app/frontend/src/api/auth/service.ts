@@ -24,7 +24,7 @@ export const login = async (data: TLoginProps): Promise<void> => {
 
 export const signup = async (data: TSignUpProps): Promise<TSignUpResponse> => {
   const res = await http.post<TSignUpResponse>(API.AUTH.SIGNUP, data)
-  if (res.status === 200) return res.data
+  if (res.status === 201) return res.data
 
   console.log(`signup: ${res}`)
   console.log("Full error:", res.data) // Better debugging

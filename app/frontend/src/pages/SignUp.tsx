@@ -37,7 +37,7 @@ export default function SignUp() {
 
       // Transform frontend data to match backend expectations
       const signupData = {
-        name: firstName, // Map firstName to name
+        first_name: firstName, // Map firstName to name
         email: restData.email,
         password: restData.password,
         // Provide placeholder values that will be updated later
