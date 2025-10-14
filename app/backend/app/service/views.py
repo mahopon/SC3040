@@ -21,6 +21,11 @@ def get_offered_services(service_service: ServiceSvc) -> JSONResponse:
     all_offered_services = service_service.get_offered_services()
     return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(all_offered_services))
 
+@offered_service_router.get("/me")
+def get_user_offered_services(service_service: ServiceSvc, id: CurrentId) -> JSONResponse:
+    offered_services = service_service.get_offered_services_by_profile_id(profile_id=id)
+    return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(offered_services))
+
 
 @offered_service_router.get("/{user_id}")
 def get_offered_services_by_id(service_service: ServiceSvc, user_id: UUID = Path(...)) -> JSONResponse:

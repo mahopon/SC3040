@@ -48,8 +48,18 @@ class ServiceRepository:
         return list(self.db_session.execute(stmt).scalars().all())
 
     def update_offered_service(self, offered_service_id: int, values: Dict[str, Any]) -> None:
+        location_ids = values.pop("locations", None)
+
         stmt = update(OfferedService).where(OfferedService.id == offered_service_id).values(**values)
         self.db_session.execute(stmt)
+        self.db_session.flush() 
+
+        if location_ids is not None:
+            offered_service = self.get_offered_service_by_id(offered_service_id=offered_service_id)
+            if offered_service:
+                locations = self.db_session.query(Location).filter(Location.id.in_(location_ids)).all()
+                offered_service.locations = locations
+                self.db_session.flush()
 
     def delete_offered_service(self, offered_service_id: int) -> None:
         stmt = delete(OfferedService).where(OfferedService.id == offered_service_id)

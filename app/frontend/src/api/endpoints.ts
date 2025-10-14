@@ -6,6 +6,13 @@ export const API = {
     CALLBACK: "/auth/callback",
     LOGOUT: "/auth/logout",
   },
+  LOCATION: {
+    GET: "/location",
+  },
+  OFFERED_SERVICE: {
+    BASE: "/offered-service",
+    SEARCH: "/offered-service/search",
+  },
   PROFILE: {
     GET: "/profile",
     UPDATE: "/profile/update",
@@ -20,9 +27,6 @@ export const API = {
   },
   SERVICE: {
     GET: "/service",
-  },
-  LOCATION: {
-    GET: "/location",
   },
   PET: "/pet",
 }

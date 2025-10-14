@@ -1,10 +1,10 @@
 import { http } from "../client"
 import { API } from "../endpoints"
-import type { TServiceListResponse } from "./types"
+import type { TServiceList } from "./types"
 
-export const fetchServiceList = async (): Promise<TServiceListResponse> => {
+export const fetchServiceList = async (): Promise<TServiceList> => {
   try {
-    const res = await http.get<TServiceListResponse>(API.SERVICE.GET)
+    const res = await http.get<TServiceList>(API.SERVICE.GET)
     console.log("GET service list: ", res)
     return res.data
   } catch (err) {

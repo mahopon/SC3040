@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Modal, { type TModalHandle } from "../ui/Modal"
 import ContentLayout from "./ContentLayout"
 import PetCard from "./PetCard"
@@ -44,27 +44,24 @@ const PetContent = () => {
   const [selectedPet, setSelectedPet] = useState<number>()
   const [pets, setPets] = useState<TPets>([])
 
-  const onAdd = useCallback(() => {
+  const onAdd = () => {
     setSelectedPet(undefined)
     reset(defaultPet)
     petModalRef.current?.openModal()
-  }, [reset])
+  }
 
-  const onEdit = useCallback(
-    ({ id, name, species, breed, age, health, preferences }: TPet) => {
-      setSelectedPet(id)
-      reset({ name, species, breed, age, healthCondition: health, preferences })
-      petModalRef.current?.openModal()
-    },
-    [pets, reset],
-  )
+  const onEdit = ({ id, name, species, breed, age, health, preferences }: TPet) => {
+    setSelectedPet(id)
+    reset({ name, species, breed, age, healthCondition: health, preferences })
+    petModalRef.current?.openModal()
+  }
 
-  const onDelete = useCallback((petId: number) => {
+  const onDelete = (petId: number) => {
     setSelectedPet(petId)
     deleteModalRef.current?.openModal()
-  }, [])
+  }
 
-  const handleAddPet = useCallback(async (data: TPetForm) => {
+  const handleAddPet = async (data: TPetForm) => {
     await PetAPI.addPet({
       ...data,
       health: data.healthCondition || "",
@@ -75,19 +72,19 @@ const PetContent = () => {
       })
       .catch((err) => alert(err.message))
       .finally(() => petModalRef.current?.closeModal())
-  }, [])
+  }
 
-  const handleEditPet = useCallback(async (data: TPetForm) => {
+  const handleEditPet = async (data: TPetForm) => {
     console.log(`Editing Pet: ${data}`)
     petModalRef.current?.closeModal()
-  }, [])
+  }
 
-  const handleDeletePet = useCallback(async (petId: number) => {
+  const handleDeletePet = async (petId: number) => {
     await PetAPI.deletePet(petId)
       .then(() => PetAPI.fetchPetsByOwner().then((data) => setPets(data)))
       .catch((err) => alert(err.message))
       .finally(() => deleteModalRef.current?.closeModal())
-  }, [])
+  }
 
   const submitForm = () => formRef.current?.requestSubmit()
 
@@ -232,6 +229,7 @@ const PetContent = () => {
           </div>
         </form>
       </Modal>
+
       <DeleteModal
         ref={deleteModalRef}
         onConfirm={() => handleDeletePet(selectedPet!)}

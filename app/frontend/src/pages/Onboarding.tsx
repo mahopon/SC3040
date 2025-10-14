@@ -26,9 +26,7 @@ export type TOnboardingForm = {
   }
   petService?: {
     serviceId: number
-    description: string
     rate: number
-    duration: number
     day: number[]
     locations: number[]
   }[]

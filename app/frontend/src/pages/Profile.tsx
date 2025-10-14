@@ -34,7 +34,7 @@ const Profile = () => {
       </div>
 
       {user && (
-        <div className="container mx-auto w-[90%] lg:w-[60%] md:w-[75%]">
+        <div className="container mx-auto w-[90%] lg:w-[60%] md:w-[75%] pb-8">
           <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-8">
             <About
               role={user.type}

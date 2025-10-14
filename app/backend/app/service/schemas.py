@@ -73,6 +73,7 @@ class OfferedServiceCreate(BaseModel):
 class OfferedServiceUpdate(BaseModel):
     rate: int
     day: List[Day]
+    locations: List[int]
 
 
 class OfferedServiceSearch(BaseModel):
