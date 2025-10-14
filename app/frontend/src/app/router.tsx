@@ -6,6 +6,7 @@ import {
   Login,
   NewBooking,
   Onboarding,
+  Payment,
   Profile,
   ServiceBrowsing,
   ServiceDetail,
@@ -25,4 +26,5 @@ export const router = createBrowserRouter([
   { path: "/booking/:id", element: <Booking /> },
   { path: "/bookings", element: <Bookings /> },
   { path: "/booking/new", element: <NewBooking /> },
+  { path: "/booking/payment", element: <Payment /> },
 ])

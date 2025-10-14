@@ -5,6 +5,7 @@ import Home from "./Home"
 import Login from "./Login"
 import NewBooking from "./NewBooking"
 import Onboarding from "./Onboarding"
+import Payment from "./Payment"
 import Profile from "./Profile"
 import ServiceBrowsing from "./ServiceBrowsing"
 import ServiceDetail from "./ServiceDetail"
@@ -18,6 +19,7 @@ export {
   Login,
   NewBooking,
   Onboarding,
+  Payment,
   Profile,
   ServiceBrowsing,
   ServiceDetail,

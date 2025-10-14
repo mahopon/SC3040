@@ -98,6 +98,23 @@ const NewBooking = () => {
       }).format(new Date(date))
     : "No date"
 
+  const handleConfirm = () => {
+    if (!hasSelections) return
+
+    navigate("/booking/payment", {
+      state: {
+        serviceId: selectedServiceDetails.id,
+        serviceName: selectedServiceDetails.name,
+        serviceDuration: selectedServiceDetails.durationLabel,
+        servicePrice: selectedServiceDetails.price,
+        date,
+        time,
+        promoCode: promoCode.trim() || null,
+        total,
+      },
+    })
+  }
+
   return (
     <main className="bookingPage">
       <header className="bookingHeader" aria-label="Page header">
@@ -264,7 +281,12 @@ const NewBooking = () => {
               </div>
             </dl>
 
-            <button type="button" className="summaryButton" disabled={!hasSelections}>
+            <button
+              type="button"
+              className="summaryButton"
+              disabled={!hasSelections}
+              onClick={handleConfirm}
+            >
               Confirm booking
             </button>
           </div>
