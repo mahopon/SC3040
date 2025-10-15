@@ -26,11 +26,12 @@ class BookingService(InternalBookingService):
         self.billing_service = billing_service
         self.payment_service = payment_service
 
-    def create_booking(self, *, owner_id: UUID, booking_create: BookingCreate) -> None:
+    def create_booking(self, *, owner_id: UUID, booking_create: BookingCreate) -> int:
         # Add check for unique pet_id, offered_service_id, date
         self.pet_service.get_pet(owner_id=owner_id, pet_id=booking_create.pet_id)
         new_booking = ServiceBooking(**booking_create.model_dump())
         self.repo.create_service_booking(service_booking_new=new_booking)
+        return new_booking.id
 
     def accept_booking(self, *, caretaker_id: UUID, booking_id: int) -> None:
         booking = self.repo.get_service_booking(booking_id=booking_id)

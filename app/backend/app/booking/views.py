@@ -15,9 +15,9 @@ def get_bookings(caller_id: CurrentId, booking_service: BookingSvc) -> JSONRespo
 
 
 @booking_router.post("")
-def create_booking(id: CurrentId, booking_service: BookingSvc, booking_details: BookingCreate) -> Response:
-    booking_service.create_booking(owner_id=id, booking_create=booking_details)
-    return Response(status_code=status.HTTP_201_CREATED)
+def create_booking(id: CurrentId, booking_service: BookingSvc, booking_details: BookingCreate) -> JSONResponse:
+    booking_id = booking_service.create_booking(owner_id=id, booking_create=booking_details)
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content={"booking_id": booking_id})
 
 
 @booking_router.get("/{booking_id}")
