@@ -40,6 +40,7 @@ class BookingOfferedService(BaseModel):
 class Booking(BaseModel):
     id: int
     status: StatusEnum
+    date: datetime
     offered_service: BookingOfferedService
     pet: BookingPet
 

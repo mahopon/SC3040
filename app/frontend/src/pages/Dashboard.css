@@ -8,9 +8,12 @@ body,
 
 #dashboard {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .dashboard {
+  flex: 1;
   padding: 2.5rem 3rem 3.5rem;
   background: linear-gradient(135deg, #6684f6 0%, #8b5cf6 55%, #f799d0 100%);
   font-family:

@@ -6,13 +6,6 @@ export const API = {
     CALLBACK: "/auth/callback",
     LOGOUT: "/auth/logout",
   },
-  LOCATION: {
-    GET: "/location",
-  },
-  OFFERED_SERVICE: {
-    BASE: "/offered-service",
-    SEARCH: "/offered-service/search",
-  },
   PROFILE: {
     GET: "/profile",
     UPDATE: "/profile/update",
@@ -28,5 +21,28 @@ export const API = {
   SERVICE: {
     GET: "/service",
   },
+  OFFERED_SERVICE: {
+    BASE: "/offered-service",
+    SEARCH: "/offered-service/search",
+  },
+  LOCATION: {
+    GET: "/location",
+  },
+  BOOKING: {
+    BASE: "/booking",
+    ACCEPT: "/accept",
+    DECLINE: "/decline",
+    CANCEL: "/cancel",
+    COMPLETE: "/completeservice",
+    PAY: "/pay",
+  },
   PET: "/pet",
+  BILLING: {
+    BASE: "/billing",
+  },
+  REVIEW: {
+    BASE: "/review",
+    SERVICE: "/review/service",
+    USER: "/review/user",
+  },
 }

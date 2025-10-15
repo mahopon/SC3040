@@ -13,6 +13,10 @@ import "./Dashboard.css"
 import { ChevronRight, CalendarPlus, CalendarCheck2, Info, X } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import Navbar from "@/components/Navbar"
+import { useUser } from "@/context/UserContext"
+import type { TBookings, TBooking } from "@/api/booking/types"
+import { BookingAPI } from "@/api"
+import { formatDateTime } from "@/utils/formatDateTime"
 
 type BookingStatus = BookingSummary["status"]
 
@@ -69,7 +73,7 @@ const LOADING_BOOKINGS_MESSAGE = "Loading bookings…"
 const EMPTY_BOOKINGS_MESSAGE = "No bookings to display yet."
 
 interface BookingRowProps {
-  readonly booking: BookingSummary
+  readonly booking: TBooking
   readonly rowClassName: string
   readonly textClassName: string
 }
@@ -77,15 +81,15 @@ interface BookingRowProps {
 const BookingRow: FC<BookingRowProps> = ({ booking, rowClassName, textClassName }) => (
   <div className={rowClassName}>
     <div className={textClassName}>
-      <span className="listTime">{booking.time}</span>
-      <span className="listService">{booking.label}</span>
+      <span className="listTime">{formatDateTime(booking.date)}</span>
+      <span className="listService">{booking.offered_service.service.name}</span>
     </div>
-    <span className={statusClassNames[booking.status]}>{booking.status}</span>
+    <span className={statusClassNames["Pending"]}>{booking.status}</span>
   </div>
 )
 
 interface BookingListProps {
-  readonly bookings: readonly BookingSummary[]
+  readonly bookings: TBookings
   readonly isLoading: boolean
   readonly limit?: number
   readonly containerClassName: string
@@ -120,7 +124,7 @@ const BookingList: FC<BookingListProps> = ({
     <div className={containerClassName}>
       {items.map((booking) => (
         <BookingRow
-          key={`${booking.time}-${booking.label}`}
+          key={`${booking.date}-${booking.offered_service.service.name}`}
           booking={booking}
           rowClassName={rowClassName}
           textClassName={textClassName}
@@ -131,6 +135,8 @@ const BookingList: FC<BookingListProps> = ({
 }
 
 const Dashboard = () => {
+  const { user } = useUser()
+  const [bookings, setBookings] = useState<TBookings>([])
   const [snapshot, setSnapshot] = useState<DashboardSnapshot | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -139,6 +145,8 @@ const Dashboard = () => {
 
   useEffect(() => {
     let isActive = true
+
+    BookingAPI.fetchBookings().then((data) => setBookings(data))
 
     const loadSnapshot = async () => {
       if (isActive) {
@@ -175,7 +183,7 @@ const Dashboard = () => {
     }
   }, [])
 
-  const bookings = useMemo(() => snapshot?.bookings ?? [], [snapshot])
+  // const bookings = useMemo(() => snapshot?.bookings ?? [], [snapshot])
   const hasSnapshot = snapshot != null
 
   const { upcomingSubtitle, upcomingHighlight } = useMemo(() => {
@@ -190,7 +198,9 @@ const Dashboard = () => {
 
     const nextBooking = bookings[0]
     return {
-      upcomingSubtitle: nextBooking ? `Next: ${nextBooking.time}` : "Next: No bookings scheduled",
+      upcomingSubtitle: nextBooking
+        ? `Next: ${formatDateTime(nextBooking.date)}`
+        : "Next: No bookings scheduled",
       upcomingHighlight: `${bookings.length} ${bookings.length === 1 ? "booking" : "bookings"}`,
     }
   }, [bookings, hasSnapshot, isLoading])
@@ -229,7 +239,7 @@ const Dashboard = () => {
   )
 
   const handleStartBooking = useCallback(() => {
-    navigate("/booking/new")
+    navigate("/services")
   }, [navigate])
 
   return (
@@ -242,12 +252,14 @@ const Dashboard = () => {
               <span className="highlightValue">{upcomingHighlight}</span>
             </div>
           </Card>
-          <Card title="This month" subtitle="Revenue">
-            <div className="highlightBlock">
-              <span className="highlightValue">{revenueAmount}</span>
-              <span className="highlightCaption">{revenueCaption}</span>
-            </div>
-          </Card>
+          {user.type === "caretaker" && (
+            <Card title="This month" subtitle="Revenue">
+              <div className="highlightBlock">
+                <span className="highlightValue">{revenueAmount}</span>
+                <span className="highlightCaption">{revenueCaption}</span>
+              </div>
+            </Card>
+          )}
         </div>
 
         <div className="wideGrid">
