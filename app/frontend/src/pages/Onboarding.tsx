@@ -98,7 +98,7 @@ const Onboarding = () => {
             async () =>
               await OnboardingAPI.onboardComplete().then(() => {
                 fetchProfile()
-                navigate("/", { replace: true })
+                navigate("/dashboard", { replace: true })
               }),
           )
         } else {
@@ -106,7 +106,7 @@ const Onboarding = () => {
             async () =>
               await OnboardingAPI.onboardComplete().then(() => {
                 fetchProfile()
-                navigate("/", { replace: true })
+                navigate("/dashboard", { replace: true })
               }),
           )
         }
@@ -117,7 +117,7 @@ const Onboarding = () => {
   useEffect(() => {
     OnboardingAPI.fetchOnboardingStatus()
       .then(({ onboarded }) => {
-        if (onboarded) navigate("/", { replace: true })
+        if (onboarded) navigate("/dashboard", { replace: true })
       })
       .catch((err) => alert(err.message))
   }, [])

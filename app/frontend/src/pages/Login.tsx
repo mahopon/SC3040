@@ -38,7 +38,7 @@ const Login = () => {
           await OnboardingAPI.fetchOnboardingStatus()
             .then(({ onboarded }) => {
               if (onboarded) fetchProfile()
-              navigate(onboarded ? "/" : "/onboarding", { replace: true })
+              navigate(onboarded ? "/dashboard" : "/onboarding", { replace: true })
             })
             .catch((err) => alert(err.message)),
       )

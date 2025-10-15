@@ -27,7 +27,7 @@ const Navbar = () => {
       <AppLogo />
 
       <div className="flex items-center gap-10">
-        <Link to="/" className="font-medium hover:underline">
+        <Link to="/dashboard" className="font-medium hover:underline">
           Dashboard
         </Link>
         <Link to="/services" className="font-medium hover:underline">

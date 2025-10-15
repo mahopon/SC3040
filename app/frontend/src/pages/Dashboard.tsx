@@ -10,18 +10,9 @@ import {
 import { fetchDashboardSnapshot } from "../api/mockapi"
 import type { BookingSummary, DashboardSnapshot } from "../api/mockapi"
 import "./Dashboard.css"
-import {
-  Sparkles,
-  Bell,
-  Settings,
-  User,
-  ChevronRight,
-  CalendarPlus,
-  CalendarCheck2,
-  Info,
-  X,
-} from "lucide-react"
+import { ChevronRight, CalendarPlus, CalendarCheck2, Info, X } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import Navbar from "@/components/Navbar"
 
 type BookingStatus = BookingSummary["status"]
 
@@ -242,136 +233,114 @@ const Dashboard = () => {
   }, [navigate])
 
   return (
-    <main className="dashboard">
-      <header className="dashboardHeader">
-        <div className="brand">
-          <div className="iconCircle">PC</div>
-          <div className="brandText">
-            <span className="brandTitle">Pawfect Match</span>
-            <span className="brandSubtitle">Quick actions at a glance.</span>
-          </div>
+    <main id="dashboard">
+      <Navbar />
+      <div className="dashboard">
+        <div className="statsGrid">
+          <Card title="Upcoming" subtitle={upcomingSubtitle}>
+            <div className="highlightBlock">
+              <span className="highlightValue">{upcomingHighlight}</span>
+            </div>
+          </Card>
+          <Card title="This month" subtitle="Revenue">
+            <div className="highlightBlock">
+              <span className="highlightValue">{revenueAmount}</span>
+              <span className="highlightCaption">{revenueCaption}</span>
+            </div>
+          </Card>
         </div>
-        <div className="navIcons">
-          <span className="badge badgeVersion">
-            <Sparkles className="badgeIcon" strokeWidth={1.6} aria-hidden="true" />
-            <span className="badgeLabel">v0.1 Mock</span>
-          </span>
-          <button type="button" className="iconButton" aria-label="View notifications">
-            <Bell strokeWidth={1.8} aria-hidden="true" />
-          </button>
-          <button type="button" className="iconButton" aria-label="Open settings">
-            <Settings strokeWidth={1.8} aria-hidden="true" />
-          </button>
-          <button type="button" className="iconButton profileButton" aria-label="Open profile">
-            <User strokeWidth={1.8} aria-hidden="true" />
-          </button>
-        </div>
-      </header>
 
-      <div className="statsGrid">
-        <Card title="Upcoming" subtitle={upcomingSubtitle}>
-          <div className="highlightBlock">
-            <span className="highlightValue">{upcomingHighlight}</span>
-          </div>
-        </Card>
-        <Card title="This month" subtitle="Revenue">
-          <div className="highlightBlock">
-            <span className="highlightValue">{revenueAmount}</span>
-            <span className="highlightCaption">{revenueCaption}</span>
-          </div>
-        </Card>
-      </div>
-
-      <div className="wideGrid">
-        <Card
-          title="Book"
-          subtitle="Select service, date & time."
-          description="Start a new booking for grooming, walks, or visits."
-          action={
-            <HoverButton
-              label="Get started"
-              icon={<ChevronRight aria-hidden="true" strokeWidth={1.8} />}
-              onClick={handleStartBooking}
-            />
-          }
-          icon={<CalendarPlus strokeWidth={1.8} aria-hidden="true" />}
-        />
-
-        <Card
-          title="View bookings"
-          subtitle="See upcoming & past appointments."
-          icon={<CalendarCheck2 strokeWidth={1.8} aria-hidden="true" />}
-        >
-          <BookingList
-            bookings={bookings}
-            isLoading={isLoading}
-            limit={3}
-            containerClassName="list"
-            rowClassName="listRow"
-            textClassName="listText"
-          />
-          {error ? (
-            <p className="errorText" role="status">
-              {error}
-            </p>
-          ) : null}
-          <button
-            type="button"
-            className="secondaryLink secondaryLinkButton"
-            onClick={handleOpenModal}
-          >
-            <span className="secondaryLinkText">Open list</span>
-            <ChevronRight aria-hidden="true" strokeWidth={1.8} className="secondaryLinkIcon" />
-          </button>
-        </Card>
-      </div>
-
-      <Card
-        title="Need help?"
-        subtitle="Frequently asked questions and contact options."
-        action={
-          <div className="needHelp">
-            <p className="needHelpText">Still stuck? We&apos;re here to help.</p>
-            <a href="#faqs" className="secondaryLink">
-              <span className="secondaryLinkText">FAQs</span>
-              <ChevronRight aria-hidden="true" strokeWidth={1.8} className="secondaryLinkIcon" />
-            </a>
-          </div>
-        }
-        icon={<Info strokeWidth={1.8} aria-hidden="true" />}
-      />
-      {isModalOpen ? (
-        <div
-          className="modalOverlay"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="allBookingsTitle"
-          onClick={handleOverlayClick}
-        >
-          <div className="modalContent">
-            <header className="modalHeader">
-              <h2 id="allBookingsTitle">All bookings</h2>
-              <button
-                type="button"
-                className="modalCloseButton"
-                onClick={handleCloseModal}
-                aria-label="Close"
-              >
-                <X aria-hidden="true" strokeWidth={1.8} />
-              </button>
-            </header>
-            <div className="modalBody">
-              <BookingList
-                bookings={bookings}
-                isLoading={isLoading}
-                containerClassName="modalList"
-                rowClassName="modalListRow"
-                textClassName="modalListText"
+        <div className="wideGrid">
+          <Card
+            title="Book"
+            subtitle="Select service, date & time."
+            description="Start a new booking for grooming, walks, or visits."
+            action={
+              <HoverButton
+                label="Get started"
+                icon={<ChevronRight aria-hidden="true" strokeWidth={1.8} />}
+                onClick={handleStartBooking}
               />
+            }
+            icon={<CalendarPlus strokeWidth={1.8} aria-hidden="true" />}
+          />
+
+          <Card
+            title="View bookings"
+            subtitle="See upcoming & past appointments."
+            icon={<CalendarCheck2 strokeWidth={1.8} aria-hidden="true" />}
+          >
+            <BookingList
+              bookings={bookings}
+              isLoading={isLoading}
+              limit={3}
+              containerClassName="list"
+              rowClassName="listRow"
+              textClassName="listText"
+            />
+            {error ? (
+              <p className="errorText" role="status">
+                {error}
+              </p>
+            ) : null}
+            <button
+              type="button"
+              className="secondaryLink secondaryLinkButton"
+              onClick={handleOpenModal}
+            >
+              <span className="secondaryLinkText">Open list</span>
+              <ChevronRight aria-hidden="true" strokeWidth={1.8} className="secondaryLinkIcon" />
+            </button>
+          </Card>
+        </div>
+
+        <Card
+          title="Need help?"
+          subtitle="Frequently asked questions and contact options."
+          action={
+            <div className="needHelp">
+              <p className="needHelpText">Still stuck? We&apos;re here to help.</p>
+              <a href="#faqs" className="secondaryLink">
+                <span className="secondaryLinkText">FAQs</span>
+                <ChevronRight aria-hidden="true" strokeWidth={1.8} className="secondaryLinkIcon" />
+              </a>
+            </div>
+          }
+          icon={<Info strokeWidth={1.8} aria-hidden="true" />}
+        />
+        {isModalOpen ? (
+          <div
+            className="modalOverlay"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="allBookingsTitle"
+            onClick={handleOverlayClick}
+          >
+            <div className="modalContent">
+              <header className="modalHeader">
+                <h2 id="allBookingsTitle">All bookings</h2>
+                <button
+                  type="button"
+                  className="modalCloseButton"
+                  onClick={handleCloseModal}
+                  aria-label="Close"
+                >
+                  <X aria-hidden="true" strokeWidth={1.8} />
+                </button>
+              </header>
+              <div className="modalBody">
+                <BookingList
+                  bookings={bookings}
+                  isLoading={isLoading}
+                  containerClassName="modalList"
+                  rowClassName="modalListRow"
+                  textClassName="modalListText"
+                />
+              </div>
             </div>
           </div>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
     </main>
   )
 }
