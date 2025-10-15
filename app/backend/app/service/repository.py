@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session, selectinload
-from sqlalchemy import select, update, delete
+from sqlalchemy import select, update, delete, and_
 from .models import Service, OfferedService
 from .enums import Day
 from app.location.models import Location
@@ -31,7 +31,7 @@ class ServiceRepository:
         self, *, service_id: int, caretaker_id: UUID
     ) -> Optional[OfferedService]:
         stmt = select(OfferedService).where(
-            OfferedService.service_id == service_id and OfferedService.caretaker_id == caretaker_id
+            and_(OfferedService.service_id == service_id, OfferedService.caretaker_id == caretaker_id)
         )
         return self.db_session.execute(stmt).scalar_one_or_none()
 
