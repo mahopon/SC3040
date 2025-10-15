@@ -1,25 +1,24 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
 import Navbar from "@/components/Navbar"
-import type { TBookings, TBookingStatus } from "@/api/booking/types"
+import type { TBooking, TBookings, TBookingStatus } from "@/api/booking/types"
 import { BookingAPI } from "@/api"
 import { useUser } from "@/context/UserContext"
 import { BOOKING_STATUS } from "@/constants/booking"
+import Modal, { type TModalHandle } from "@/components/ui/Modal"
+import { formatDateTime } from "@/utils/formatDateTime"
 
 const Bookings = () => {
   const {
     user: { type },
   } = useUser()
 
+  const bookingModalRef = useRef<TModalHandle>(null)
   const [activeTab, setActiveTab] = useState<"all" | TBookingStatus>("all")
   const [bookings, setBookings] = useState<TBookings>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
-  const handleAction = (id: number, action: string) => {
-    console.log(`Booking ${id}: ${action} attempted.`)
-    alert(`Action: ${action} on booking ${id}. (Not implemented yet)`)
-  }
+  const [booking, setBooking] = useState<TBooking>()
 
   const fetchBookings = async () => {
     setLoading(true)
@@ -71,6 +70,11 @@ const Bookings = () => {
 
   const getTabCount = (status: TBookingStatus) => {
     return bookings.filter((booking) => booking.status === status).length
+  }
+
+  const handleViewBooking = (booking: TBooking) => {
+    setBooking(booking)
+    bookingModalRef.current?.openModal()
   }
 
   const handleAcceptBooking = async (id: number) => {
@@ -249,7 +253,7 @@ const Bookings = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <button
-                            onClick={() => handleAction(booking.id, "View Details")}
+                            onClick={() => handleViewBooking(booking)}
                             className="text-gray-500 hover:text-gray-700 text-sm mr-3"
                           >
                             View
@@ -299,6 +303,67 @@ const Bookings = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {booking && (
+        <Modal
+          ref={bookingModalRef}
+          header={`Details for Booking #${booking.id}`}
+          actionButtons={[
+            {
+              label: "Close",
+              onClick: () => bookingModalRef.current?.closeModal(),
+              variant: "secondary",
+            },
+          ]}
+        >
+          <div className="space-y-4 text-sm text-gray-700">
+            <h3 className="font-semibold text-gray-900 border-b pb-1">Service & Status</h3>
+            <div className="grid grid-cols-2 gap-y-2">
+              <div>
+                <span className="font-medium">Service:</span> {booking.offered_service.service.name}
+              </div>
+              <div>
+                <span className="font-medium">Provider ID:</span>{" "}
+                {booking.offered_service.caretaker_id}
+              </div>
+              <div>
+                <span className="font-medium">Date:</span> {formatDateTime(booking.date)}
+              </div>
+              <div>
+                <span className="font-medium">Status:</span>
+                <span className="ml-2 px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full capitalize bg-blue-100 text-blue-800">
+                  {booking.status.replace(/_/g, " ")}
+                </span>
+              </div>
+            </div>
+
+            <h3 className="font-semibold text-gray-900 border-b pb-1 pt-2">Pet Details</h3>
+            <div className="grid grid-cols-2 gap-y-2">
+              <div>
+                <span className="font-medium">Pet Name:</span> {booking.pet.name}
+              </div>
+              <div>
+                <span className="font-medium">Species:</span> {booking.pet.species}
+              </div>
+              <div>
+                <span className="font-medium">Breed:</span> {booking.pet.breed}
+              </div>
+              <div>
+                <span className="font-medium">Age:</span> {booking.pet.age} years
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <p>
+                <span className="font-medium">Health:</span> {booking.pet.health || "N/A"}
+              </p>
+              <p>
+                <span className="font-medium">Preferences:</span> {booking.pet.preferences || "N/A"}
+              </p>
+            </div>
+          </div>
+        </Modal>
       )}
     </>
   )
