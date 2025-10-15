@@ -1,5 +1,13 @@
 import type { TService } from "../service/types"
 
+export type TBookingStatus =
+  | "pending"
+  | "cancelled"
+  | "accepted"
+  | "declined"
+  | "pendingpayment"
+  | "completed"
+
 type TBookingOfferedService = {
   id: number
   caretaker_id: string
@@ -19,7 +27,7 @@ type TBookingPet = {
 
 export type TBooking = {
   id: number
-  status: string
+  status: TBookingStatus
   date: string
   offered_service: TBookingOfferedService
   pet: TBookingPet

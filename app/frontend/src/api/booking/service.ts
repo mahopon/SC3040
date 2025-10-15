@@ -37,7 +37,7 @@ export const addBooking = async (data: TAddBookingRequest): Promise<void> => {
 
 export const acceptBooking = async (id: number): Promise<void> => {
   try {
-    const res = await http.post<void>(`${API.BOOKING.BASE}/${id}/${API.BOOKING.ACCEPT}`)
+    const res = await http.post<void>(`${API.BOOKING.BASE}/${id}${API.BOOKING.ACCEPT}`)
     console.log("POST accept booking: ", res)
     return res.data
   } catch (err) {
@@ -48,7 +48,7 @@ export const acceptBooking = async (id: number): Promise<void> => {
 
 export const declineBooking = async (id: number): Promise<void> => {
   try {
-    const res = await http.post<void>(`${API.BOOKING.BASE}/${id}/${API.BOOKING.DECLINE}`)
+    const res = await http.post<void>(`${API.BOOKING.BASE}/${id}${API.BOOKING.DECLINE}`)
     console.log("POST decline booking: ", res)
     return res.data
   } catch (err) {
@@ -59,7 +59,7 @@ export const declineBooking = async (id: number): Promise<void> => {
 
 export const cancelBooking = async (id: number): Promise<void> => {
   try {
-    const res = await http.post<void>(`${API.BOOKING.BASE}/${id}/${API.BOOKING.CANCEL}`)
+    const res = await http.post<void>(`${API.BOOKING.BASE}/${id}${API.BOOKING.CANCEL}`)
     console.log("POST cancel booking: ", res)
     return res.data
   } catch (err) {
@@ -70,7 +70,7 @@ export const cancelBooking = async (id: number): Promise<void> => {
 
 export const completeBooking = async (id: number): Promise<void> => {
   try {
-    const res = await http.post<void>(`${API.BOOKING.BASE}/${id}/${API.BOOKING.COMPLETE}`)
+    const res = await http.post<void>(`${API.BOOKING.BASE}/${id}${API.BOOKING.COMPLETE}`)
     console.log("POST complete booking: ", res)
     return res.data
   } catch (err) {
@@ -81,7 +81,7 @@ export const completeBooking = async (id: number): Promise<void> => {
 
 export const payBooking = async (id: number): Promise<void> => {
   try {
-    const res = await http.post<void>(`${API.BOOKING.BASE}/${id}/${API.BOOKING.PAY}`)
+    const res = await http.post<void>(`${API.BOOKING.BASE}/${id}${API.BOOKING.PAY}`)
     console.log("POST pay booking: ", res)
     return res.data
   } catch (err) {
