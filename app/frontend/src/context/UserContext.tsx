@@ -38,9 +38,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   })
 
   const fetchProfile = async () => {
-    await ProfileAPI.fetchProfile()
-      .then((data) => setUser(data))
-      .catch((err) => alert(err.message))
+    await ProfileAPI.fetchProfile().then((data) => setUser(data))
   }
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 export * as AuthAPI from "./auth/service"
+export * as BookingAPI from "./booking/service"
 export * as LocationAPI from "./location/service"
 export * as OfferedServiceAPI from "./offeredService/service"
 export * as OnboardingAPI from "./onboarding/service"

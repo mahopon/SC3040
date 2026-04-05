@@ -1,6 +1,7 @@
 import { OnboardingAPI } from "@/api"
 import type { TUserGender, TUserRole } from "@/api/profile/types"
 import { UserProfile, RoleSelection, PetProfile, PetService } from "@/components/onboarding"
+import { useUser } from "@/context/UserContext"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
@@ -34,6 +35,7 @@ export type TOnboardingForm = {
 
 const Onboarding = () => {
   const navigate = useNavigate()
+  const { fetchProfile } = useUser()
   const [currentStep, setCurrentStep] = useState<TOnboardingSteps>("role")
   const [userRole, setUserRole] = useState<TUserRole>()
 
@@ -94,12 +96,18 @@ const Onboarding = () => {
             preferences: petProfile?.preferences ?? "",
           }).then(
             async () =>
-              await OnboardingAPI.onboardComplete().then(() => navigate("/", { replace: true })),
+              await OnboardingAPI.onboardComplete().then(() => {
+                fetchProfile()
+                navigate("/dashboard", { replace: true })
+              }),
           )
         } else {
           await OnboardingAPI.onboardService(petService!).then(
             async () =>
-              await OnboardingAPI.onboardComplete().then(() => navigate("/", { replace: true })),
+              await OnboardingAPI.onboardComplete().then(() => {
+                fetchProfile()
+                navigate("/dashboard", { replace: true })
+              }),
           )
         }
       })
@@ -109,7 +117,7 @@ const Onboarding = () => {
   useEffect(() => {
     OnboardingAPI.fetchOnboardingStatus()
       .then(({ onboarded }) => {
-        if (onboarded) navigate("/", { replace: true })
+        if (onboarded) navigate("/dashboard", { replace: true })
       })
       .catch((err) => alert(err.message))
   }, [])

@@ -1,8 +1,9 @@
 import { Link, useNavigate } from "react-router-dom"
 import AppLogo from "./AppLogo"
-import { AuthAPI } from "@/api"
 import { userPlaceholderUrl } from "@/assets"
 import { useUser } from "@/context/UserContext"
+import { AuthAPI } from "@/api"
+import { useEffect } from "react"
 
 const Navbar = () => {
   const navigate = useNavigate()
@@ -14,13 +15,23 @@ const Navbar = () => {
     AuthAPI.logout().then(() => navigate("/login", { replace: true }))
   }
 
+  useEffect(() => {
+    AuthAPI.isAuthenticated().then(({ authenticated }) => {
+      console.log("Authenticated: ", authenticated)
+      if (!authenticated) navigate("/login", { replace: true })
+    })
+  }, [])
+
   return (
     <nav className="w-full shadow-md flex items-center justify-between px-8 py-5">
       <AppLogo />
 
       <div className="flex items-center gap-10">
-        <Link to="/" className="font-medium hover:underline">
+        <Link to="/dashboard" className="font-medium hover:underline">
           Dashboard
+        </Link>
+        <Link to="/services" className="font-medium hover:underline">
+          Browse Services
         </Link>
         <Link to="/bookings" className="font-medium hover:underline">
           Bookings
@@ -37,8 +48,13 @@ const Navbar = () => {
 
           <div className="absolute right-0 z-10 hidden bg-grey-200 group-hover:block bg-white shadow-2xl min-w-[150px] rounded-md border border-gray-100">
             <ul>
-              <li className="px-5 py-3 rounded-md hover:bg-gray-100 hover:cursor-pointer">
-                <Link to="/profile">Profile</Link>
+              <li>
+                <Link
+                  to="/profile"
+                  className="block w-full px-5 py-3 rounded-md hover:bg-gray-100 hover:cursor-pointer"
+                >
+                  Profile
+                </Link>
               </li>
               <li
                 className="px-5 py-3 rounded-md hover:bg-gray-100 hover:cursor-pointer"

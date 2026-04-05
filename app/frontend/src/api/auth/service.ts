@@ -3,10 +3,14 @@ import { API } from "../endpoints"
 import type { TAuthenticatedResponse, TLoginProps, TSignUpProps, TSignUpResponse } from "./types"
 
 export const isAuthenticated = async (): Promise<TAuthenticatedResponse> => {
-  const res = await http.get(API.PROFILE.GET)
-  if (res.status === 200) {
-    return { authenticated: true }
-  } else {
+  try {
+    const res = await http.get(API.PROFILE.GET)
+    if (res.status === 200) {
+      return { authenticated: true }
+    } else {
+      return { authenticated: false }
+    }
+  } catch (err) {
     return { authenticated: false }
   }
 }
@@ -24,7 +28,7 @@ export const login = async (data: TLoginProps): Promise<void> => {
 
 export const signup = async (data: TSignUpProps): Promise<TSignUpResponse> => {
   const res = await http.post<TSignUpResponse>(API.AUTH.SIGNUP, data)
-  if (res.status === 200) return res.data
+  if (res.status === 201) return res.data
 
   console.log(`signup: ${res}`)
   console.log("Full error:", res.data) // Better debugging

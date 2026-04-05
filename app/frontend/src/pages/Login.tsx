@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom"
 import Loading from "@/components/Loading"
 import { AuthAPI, OnboardingAPI } from "@/api"
 import AppLogo from "@/components/AppLogo"
+import { useUser } from "@/context/UserContext"
 
 type TLoginForm = {
   email: string
@@ -14,6 +15,7 @@ type TLoginForm = {
 
 const Login = () => {
   const navigate = useNavigate()
+  const { fetchProfile } = useUser()
   const [showPassword, setShowPassword] = useState(false)
 
   const {
@@ -34,7 +36,10 @@ const Login = () => {
       .then(
         async () =>
           await OnboardingAPI.fetchOnboardingStatus()
-            .then(({ onboarded }) => navigate(onboarded ? "/" : "/onboarding", { replace: true }))
+            .then(({ onboarded }) => {
+              if (onboarded) fetchProfile()
+              navigate(onboarded ? "/dashboard" : "/onboarding", { replace: true })
+            })
             .catch((err) => alert(err.message)),
       )
       .catch((err) => alert(err.message))
